@@ -1,4 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import statusCode from "../module/constants/statusCode";
+import errorGenerator from "../module/error/errorGenerator";
 const prisma = new PrismaClient();
 
 const saveMintInfo = async (userId: number, nftGrade: string) => {
@@ -11,7 +13,7 @@ const saveMintInfo = async (userId: number, nftGrade: string) => {
     });
     return data;
   } catch (error) {
-    throw error;
+    throw errorGenerator({ statusCode: statusCode.INTERNAL_SERVER_ERROR });
   }
 };
 
