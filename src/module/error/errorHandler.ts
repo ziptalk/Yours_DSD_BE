@@ -11,3 +11,5 @@ const errorHandler = (
   const { message, statusCode } = error;
   fail(res, statusCode!, message);
 };
+
+export default errorHandler;
