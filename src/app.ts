@@ -9,6 +9,7 @@ app.listen(config.port, () => {
   console.log(`
     ###########################################
       ✨ SERVER LISTENING ON PORT: ${config.port} ✨
+         NODE_ENV IS ${config.env}
     ###########################################
   `);
 });
