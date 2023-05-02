@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ziptalk/DSD#readme",
   "dependencies": {
+    "@prisma/client": "^4.13.0",
     "@types/dotenv": "^8.2.0",
     "@types/node": "^18.16.3",
     "express": "^4.18.2",
