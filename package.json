@@ -1,0 +1,26 @@
+{
+  "name": "dsd",
+  "version": "1.0.0",
+  "description": "BWL-DSD",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "tsnode": "ts-node src/app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ziptalk/DSD.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ziptalk/DSD/issues"
+  },
+  "homepage": "https://github.com/ziptalk/DSD#readme",
+  "dependencies": {
+    "@types/node": "^18.16.3",
+    "jest": "^29.5.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}
