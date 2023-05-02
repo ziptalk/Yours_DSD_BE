@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import config from "./config";
-import router from "./routes";
+import router from "./router";
 
 const app = express();
 app.use(express.json());
