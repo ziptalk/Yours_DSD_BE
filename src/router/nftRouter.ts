@@ -5,7 +5,7 @@ import errorValidator from "../module/error/errorValidator";
 const router: Router = Router();
 
 router.post(
-  "/",
+  "/own",
   [body("userId").notEmpty(), body("nftGrade").notEmpty()],
   errorValidator,
   nftController.mintNft
