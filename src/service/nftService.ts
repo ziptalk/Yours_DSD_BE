@@ -5,12 +5,16 @@ const prisma = new PrismaClient();
 
 const saveMintInfo = async (userId: number, nftGrade: string) => {
   try {
-    const data = await prisma.user_has_nft.create({
+    const user = await prisma.user_has_nft.create({
       data: {
         user_id: userId,
         grade: nftGrade,
       },
     });
+    const data = {
+      userId: user.user_id,
+      nftGrade: user.grade,
+    };
     return data;
   } catch (error) {
     throw errorGenerator({ statusCode: statusCode.INTERNAL_SERVER_ERROR });
