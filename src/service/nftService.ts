@@ -25,4 +25,27 @@ const saveMintInfo = async (userId: number, nftName: string) => {
   }
 };
 
-export { saveMintInfo };
+const deleteManyMintInfo = async (userId: number, oldNfts: Array<string>) => {
+  try {
+    await prisma.$transaction(async (tx) => {
+      for (let i = 0; i < oldNfts.length; i++) {
+        const oldNftNames = oldNfts[i];
+        const nft = await tx.user_has_nft.findFirst({
+          where: { user_id: userId, name: oldNftNames },
+        });
+        await tx.user_has_nft.delete({
+          where: {
+            id: nft?.id,
+          },
+        });
+      }
+    });
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.INSUFFICIENT_NFT,
+      statusCode: statusCode.BAD_REQUEST,
+    });
+  }
+};
+
+export { saveMintInfo, deleteManyMintInfo };
