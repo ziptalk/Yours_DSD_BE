@@ -11,6 +11,15 @@ router.post(
   errorValidator,
   nftController.mintNft
 );
-
+router.post(
+  "/integrate",
+  [
+    body("userId").notEmpty(),
+    body("oldNfts").notEmpty(),
+    body("newNft").notEmpty(),
+  ],
+  errorValidator,
+  nftController.integrateNft
+);
 
 export default router;
