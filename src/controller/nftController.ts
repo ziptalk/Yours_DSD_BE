@@ -7,12 +7,7 @@ const mintNft = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, nftName } = req.body;
     const data = await nftService.saveMintInfo(+userId, nftName);
-    return success(
-      res,
-      statusCode.OK,
-      responseMessage.SAVE_USER_NFT_INFO_SUCCESS,
-      data
-    );
+    return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
   }
