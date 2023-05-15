@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { nftController } from "../controller";
 import errorValidator from "../module/error/errorValidator";
 const router: Router = Router();
@@ -20,6 +20,13 @@ router.post(
   ],
   errorValidator,
   nftController.integrateNft
+);
+
+router.get(
+  "/own/:userId",
+  [param("userId").isInt()],
+  errorValidator,
+  nftController.getUserNftInfo
 );
 
 export default router;
