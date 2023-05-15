@@ -8,7 +8,7 @@ const errorValidator = (req: Request, res: Response, next: NextFunction) => {
   if (!errors.isEmpty()) {
     return res
       .status(statusCode.BAD_REQUEST)
-      .send(fail(res, statusCode.BAD_REQUEST, responseMessage.BAD_REQUEST));
+      .send(fail(res, statusCode.BAD_REQUEST, responseMessage.ERROR_VALIDATOR));
   }
   next();
 };
