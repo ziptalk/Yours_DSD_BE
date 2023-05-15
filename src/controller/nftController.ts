@@ -22,10 +22,24 @@ const integrateNft = async (
     const { userId, oldNfts, newNft } = req.body;
     await nftService.deleteManyMintInfo(userId, oldNfts);
     const data = await nftService.saveMintInfo(userId, newNft);
-    success(res, statusCode.OK, responseMessage.SUCCESS, data);
+    return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
   }
 };
 
-export { mintNft, integrateNft };
+const getUserNftInfo = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = req.params;
+    const data = await nftService.getUserNftByUserId(+userId);
+    return success(res, statusCode.OK, responseMessage.SUCCESS, data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { mintNft, integrateNft, getUserNftInfo };
