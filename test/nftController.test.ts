@@ -10,7 +10,7 @@ describe("mintNft : api/nft/own", () => {
   const expectedResponse = {
     status: statusCode.OK,
     success: true,
-    message: responseMessage.SAVE_USER_NFT_INFO_SUCCESS,
+    message: responseMessage.SUCCESS,
     data: expectedData,
   };
   const req: any = {
