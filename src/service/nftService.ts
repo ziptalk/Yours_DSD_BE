@@ -48,4 +48,18 @@ const deleteManyMintInfo = async (userId: number, oldNfts: Array<string>) => {
   }
 };
 
-export { saveMintInfo, deleteManyMintInfo };
+const getUserNftByUserId = async (userId: number) => {
+  try {
+    const data = await prisma.user_has_nft.findMany({
+      where: { user_id: userId, deleted_at: null },
+      select: { user_id: true, name: true },
+    });
+    return data;
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.GET_USER_NFT_INFO_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
+export { saveMintInfo, deleteManyMintInfo, getUserNftByUserId };
