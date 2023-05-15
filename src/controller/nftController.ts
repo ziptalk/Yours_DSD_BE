@@ -5,9 +5,9 @@ import { success } from "../module/util";
 import { nftService } from "../service";
 const mintNft = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { userId, nftGrade } = req.body;
-    const data = await nftService.saveMintInfo(+userId, nftGrade);
-    success(
+    const { userId, nftName } = req.body;
+    const data = await nftService.saveMintInfo(+userId, nftName);
+    return success(
       res,
       statusCode.OK,
       responseMessage.SAVE_USER_NFT_INFO_SUCCESS,
