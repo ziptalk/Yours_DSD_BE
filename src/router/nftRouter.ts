@@ -29,4 +29,11 @@ router.get(
   nftController.getUserNftInfo
 );
 
+router.delete(
+  "/own/:userId",
+  [param("userId").isInt(), body("nfts").notEmpty()],
+  errorValidator,
+  nftController.deleteUserNftInfo
+);
+
 export default router;
