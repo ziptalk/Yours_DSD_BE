@@ -42,4 +42,18 @@ const getUserNftInfo = async (
   }
 };
 
-export { mintNft, integrateNft, getUserNftInfo };
+const deleteUserNftInfo = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.params;
+    const { nfts } = req.body;
+    await nftService.deleteManyMintInfo(+userId, nfts);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { mintNft, integrateNft, getUserNftInfo, deleteUserNftInfo };
