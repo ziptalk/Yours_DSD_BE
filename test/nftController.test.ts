@@ -92,4 +92,20 @@ describe("getUserNftInfo api/nft/own/:userId", () => {
   });
 });
 
+describe("deleteUserNftInfo api/nft/own/:userId", () => {
+  const req: any = {
+    params: { id: 1 },
+    body: { nfts: ["SS"] },
+  };
+  const res: any = {
+    status: jest.fn(() => res),
+    send: jest.fn(),
+  };
 
+  const next = jest.fn();
+  test("deleteUserNftInfo 정상 작동 테스트", async () => {
+    nftService.deleteManyMintInfo = jest.fn();
+    await deleteUserNftInfo(req, res, next);
+    expect(res.status).toBeCalledWith(statusCode.OK);
+  });
+});
