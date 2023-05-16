@@ -29,9 +29,9 @@ const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
   try {
     await prisma.$transaction(async (tx) => {
       for (let i = 0; i < nfts.length; i++) {
-        const oldNftNames = nfts[i];
+        const nftName = nfts[i];
         const nft = await tx.user_has_nft.findFirst({
-          where: { user_id: userId, name: oldNftNames },
+          where: { user_id: userId, name: nftName },
         });
         await tx.user_has_nft.delete({
           where: {
