@@ -48,9 +48,10 @@ const deleteUserNftInfo = async (
   next: NextFunction
 ) => {
   try {
-    const userId = req.params;
+    const { userId } = req.params;
     const { nfts } = req.body;
     await nftService.deleteManyMintInfo(+userId, nfts);
+    return success(res, statusCode.OK, responseMessage.SUCCESS);
   } catch (error) {
     next(error);
   }
