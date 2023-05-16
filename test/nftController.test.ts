@@ -1,4 +1,9 @@
-import { integrateNft, mintNft } from "../src/controller/nftController";
+import {
+  deleteUserNftInfo,
+  getUserNftInfo,
+  integrateNft,
+  mintNft,
+} from "../src/controller/nftController";
 import { statusCode, responseMessage } from "../src/module";
 import { nftService } from "../src/service";
 
@@ -69,3 +74,22 @@ describe("integrateNft : api/nft/integrate", () => {
     expect(res.send).toBeCalledWith(expectedResponse);
   });
 });
+
+describe("getUserNftInfo api/nft/own/:userId", () => {
+  const req: any = {
+    params: { id: 1 },
+  };
+  const res: any = {
+    status: jest.fn(() => res),
+    send: jest.fn(),
+  };
+
+  const next = jest.fn();
+  test("getUserNftInfo 정상 작동 테스트", async () => {
+    nftService.getUserNftByUserId = jest.fn();
+    await getUserNftInfo(req, res, next);
+    expect(res.status).toBeCalledWith(statusCode.OK);
+  });
+});
+
+
