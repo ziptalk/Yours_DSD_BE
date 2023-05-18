@@ -36,4 +36,10 @@ router.delete(
   nftController.deleteUserNftInfo
 );
 
+router.post(
+  "/",
+  [body("name").notEmpty()],
+  errorValidator,
+  nftController.createNft
+);
 export default router;
