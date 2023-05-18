@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import statusCode from "../module/constants/statusCode";
 import errorGenerator from "../module/error/errorGenerator";
 import { responseMessage } from "../module";
+import { nftDto } from "../interface/nftDto";
 const prisma = new PrismaClient();
 
 const saveMintInfo = async (userId: number, nftName: string) => {
@@ -62,4 +63,24 @@ const getUserNftByUserId = async (userId: number) => {
     });
   }
 };
-export { saveMintInfo, deleteManyMintInfo, getUserNftByUserId };
+
+const saveNftInfo = async (nftDto: nftDto) => {
+  try {
+    const createdNft = await prisma.nft.create({
+      data: {
+        name: nftDto.name,
+        image: nftDto.image,
+        video: nftDto.video,
+        description: nftDto.description,
+        serial_number: nftDto.serialNumber,
+      },
+    });
+    return createdNft;
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.CREATE_NFT_INFO_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
+export { saveMintInfo, deleteManyMintInfo, getUserNftByUserId, saveNftInfo };
