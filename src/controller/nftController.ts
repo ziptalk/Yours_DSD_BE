@@ -3,6 +3,7 @@ import responseMessage from "../module/constants/responseMessage";
 import statusCode from "../module/constants/statusCode";
 import { success } from "../module/util";
 import { nftService } from "../service";
+import { nftDto } from "../interface/nftDto";
 const mintNft = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, nftName } = req.body;
@@ -57,4 +58,20 @@ const deleteUserNftInfo = async (
   }
 };
 
-export { mintNft, integrateNft, getUserNftInfo, deleteUserNftInfo };
+const createNft = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { name, image, video, description, serialNumber } = req.body;
+    const nftDto: nftDto = {
+      name,
+      image,
+      video,
+      description,
+      serialNumber,
+    };
+    const data = await nftService.saveNftInfo(nftDto);
+    return success(res, statusCode.OK, responseMessage.SUCCESS, data);
+  } catch (error) {
+    next(error);
+  }
+};
+export { mintNft, integrateNft, getUserNftInfo, deleteUserNftInfo, createNft };
