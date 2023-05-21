@@ -25,4 +25,7 @@ export default {
    * PORT
    */
   port: parseInt(process.env.PORT as string, 10) as number,
+
+  mumbaiRPC: process.env.MUMBAI_RPC as string,
+  walletSecretKey: process.env.WALLET_SECRET_KEY as string,
 };
