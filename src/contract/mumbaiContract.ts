@@ -96,3 +96,11 @@ const transferMumbaiNFT = async (
 
   return data;
 };
+
+export {
+  deployMumbaiNFT,
+  polygonProvider,
+  mintMumbaiNFT,
+  setMumbaiBenefitURI,
+  transferMumbaiNFT,
+};
