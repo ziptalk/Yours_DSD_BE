@@ -1,4 +1,8 @@
 export default {
+  IPFS_ERROR: "ipfs 오류입니다.",
+  META_ERROR: "메타 데이터 업로드 실패",
+  BENEFIT_DATA_ERROR: "혜택 데이터 업로드 실패",
+
   INTERNAL_SERVER_ERROR: "서버 에러",
   BAD_REQUEST: "잘못된 요청입니다.",
   ERROR_VALIDATOR: "errorValidator 오류 발생",
