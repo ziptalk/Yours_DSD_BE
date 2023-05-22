@@ -13,6 +13,7 @@ export default {
   GET_USER_NFT_INFO_FAIL: "nft 유저 정보 조회 중 에러가 발생하였습니다.",
   CREATE_NFT_INFO_FAIL: "nft 정보 생성 중 에러가 발생하였습니다.",
   GET_NFT_INFO_FAIL: "nft 정보 조회 중 에러가 발생하였습니다.",
+  DEPLOY_NFT_FAIL: "nft 발행 중 에러가 발생하였습니다.",
 
   INSUFFICIENT_NFT: "충분한 nft를 보유하고 있지 않습니다",
 };
