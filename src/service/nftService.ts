@@ -100,4 +100,10 @@ const getNftInfo = async (nftName: string) => {
     });
   }
 };
-export { saveMintInfo, deleteManyMintInfo, getUserNftByUserId, saveNftInfo };
+export {
+  saveMintInfo,
+  deleteManyMintInfo,
+  getUserNftByUserId,
+  saveNftInfo,
+  getNftInfo,
+};
