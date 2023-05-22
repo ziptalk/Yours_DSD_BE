@@ -20,7 +20,8 @@ const client = create({
 const uploadMetaIpfs = async (
   name: string | null,
   description: string | null,
-  image: string | null
+  image: string | null,
+  video: string | null
 ) => {
   let resultPath = "";
   try {
@@ -29,6 +30,7 @@ const uploadMetaIpfs = async (
         name,
         description,
         image,
+        video,
       })
     );
     resultPath = `https://ipfs.infura.io/ipfs/${result.path}`;
