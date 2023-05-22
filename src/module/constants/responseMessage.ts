@@ -14,6 +14,7 @@ export default {
   CREATE_NFT_INFO_FAIL: "nft 정보 생성 중 에러가 발생하였습니다.",
   GET_NFT_INFO_FAIL: "nft 정보 조회 중 에러가 발생하였습니다.",
   DEPLOY_NFT_FAIL: "nft 발행 중 에러가 발생하였습니다.",
+  SAVE_NFT_ADDR_FAIL: "nft 주소 저장 중 에러가 발생하였습니다.",
 
   START_LOADING_FAIL: "nft 발행을 시작하는데 실패하였습니다.",
   FINISH_LOADING_FAIL: "nft발행을 끝내는데 실패하였습니다.",
