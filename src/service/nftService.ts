@@ -118,6 +118,25 @@ const startLoading = async (nftName: string) => {
     });
   }
 };
+
+const finishLoading = async (nftName: string) => {
+  try {
+    await prisma.nft.update({
+      where: {
+        name: nftName,
+      },
+      data: {
+        isLoading: false,
+      },
+    });
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.FINISH_LOADING_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
+
 export {
   saveMintInfo,
   deleteManyMintInfo,
@@ -125,4 +144,5 @@ export {
   saveNftInfo,
   getNftInfo,
   startLoading,
+  finishLoading,
 };
