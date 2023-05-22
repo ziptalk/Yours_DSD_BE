@@ -64,24 +64,6 @@ const mintMumbaiNFT = async (nft: any, address: string) => {
   return data;
 };
 
-const setMumbaiBenefitURI = async (nft: ethers.Contract, uri: string) => {
-  const transaction = await nft.connect(wallet).setBenefitsURI(uri);
-  const rc = await transaction.wait();
-  const event = rc.events.find(
-    (event: any) => event.event === "ChangeBenefitsURI"
-  );
-  const transactionHash = event.transactionHash;
-  const block = await event.getBlock(); // check minting block timestamp
-  const date = new Date(block.timestamp * 1000);
-
-  const data = {
-    transactionHash: transactionHash,
-    date: date,
-  };
-
-  return data;
-};
-
 const transferMumbaiNFT = async (
   nft: ethers.Contract,
   id: number,
@@ -97,10 +79,4 @@ const transferMumbaiNFT = async (
   return data;
 };
 
-export {
-  deployMumbaiNFT,
-  polygonProvider,
-  mintMumbaiNFT,
-  setMumbaiBenefitURI,
-  transferMumbaiNFT,
-};
+export { deployMumbaiNFT, polygonProvider, mintMumbaiNFT, transferMumbaiNFT };
