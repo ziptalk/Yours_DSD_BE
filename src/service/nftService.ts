@@ -137,6 +137,21 @@ const finishLoading = async (nftName: string) => {
   }
 };
 
+const saveNftAddress = async (nftName: string, nftAddress: string) => {
+  try {
+    await prisma.nft.update({
+      where: { name: nftName },
+      data: {
+        nftAddress,
+      },
+    });
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.SAVE_NFT_ADDR_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
 export {
   saveMintInfo,
   deleteManyMintInfo,
@@ -145,4 +160,5 @@ export {
   getNftInfo,
   startLoading,
   finishLoading,
+  saveNftAddress,
 };
