@@ -39,21 +39,6 @@ const uploadMetaIpfs = async (
   }
 };
 
-const uploadBenefitIpfs = async (benefits: Object[]) => {
-  let resultPath = "";
-  try {
-    const result = await client.add(
-      JSON.stringify({
-        benefits,
-      })
-    );
-    resultPath = `https://ipfs.infura.io/ipfs/${result.path}`;
-    return resultPath;
-  } catch (error) {
-    console.log(error);
-    return responseMessage.BENEFIT_DATA_ERROR;
-  }
-};
 const getDeployedAddress = async (transaction: ethers.Contract) => {
   const rc = await transaction.wait();
   const event = rc.events.find((event: any) => event.event === "DeployNFT");
@@ -82,4 +67,4 @@ const getMethods = (data: any) => {
   });
 };
 
-export { uploadMetaIpfs, uploadBenefitIpfs, getDeployedAddress, getMethods };
+export { uploadMetaIpfs, getDeployedAddress, getMethods };
