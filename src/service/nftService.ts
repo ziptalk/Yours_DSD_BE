@@ -100,10 +100,29 @@ const getNftInfo = async (nftName: string) => {
     });
   }
 };
+
+const startLoading = async (nftName: string) => {
+  try {
+    await prisma.nft.update({
+      where: {
+        name: nftName,
+      },
+      data: {
+        isLoading: true,
+      },
+    });
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.START_LOADING_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
 export {
   saveMintInfo,
   deleteManyMintInfo,
   getUserNftByUserId,
   saveNftInfo,
   getNftInfo,
+  startLoading,
 };
