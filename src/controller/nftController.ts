@@ -60,13 +60,12 @@ const deleteUserNftInfo = async (
 
 const createNft = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name, image, video, description, serialNumber } = req.body;
+    const { name, image, video, description } = req.body;
     const nftDto: nftDto = {
       name,
       image,
       video,
       description,
-      serialNumber,
     };
     const data = await nftService.saveNftInfo(nftDto);
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
@@ -74,4 +73,5 @@ const createNft = async (req: Request, res: Response, next: NextFunction) => {
     next(error);
   }
 };
+
 export { mintNft, integrateNft, getUserNftInfo, deleteUserNftInfo, createNft };
