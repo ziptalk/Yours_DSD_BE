@@ -14,36 +14,23 @@ const contract = new ethers.Contract(
   polygonProvider
 );
 
-const deployMumbaiNFT = async (
-  name: string | null,
-  uri: string | null,
-  benefitUri: string | null
-) => {
+const deployMumbaiNFT = async (name: string | null, uri: string | null) => {
+  let rc;
   try {
-    let transaction;
-    const gas = await contract
-      .connect(wallet)
-      .estimateGas.deployNFT(name, "", uri, benefitUri, []);
-    transaction = await contract
-      .connect(wallet)
-      .deployNFT(name, "", uri, benefitUri, [], {
-        gasLimit: gas,
-      });
-    const deployedInfo = await getDeployedAddress(transaction);
-    while (typeof deployedInfo.contractAddress == "string") {
-      const deployedInfo = await getDeployedAddress(transaction);
-      return deployedInfo;
-    }
-
-    const data = {
-      contractAddress: deployedInfo.contractAddress,
-      transactionHash: deployedInfo.transactionHash,
-      date: deployedInfo.date,
-    };
-    return data;
+    const gas = await contract.connect(wallet).estimateGas.deployNFT(name, uri);
+    console.log("Gas :", gas);
+    const tx = await contract.connect(wallet).deployNFT(name, uri, {
+      gasLimit: gas,
+    });
+    rc = await tx.wait();
   } catch (error) {
-    throw error;
+    console.log(error);
+    console.log("전체 함수 중지");
   }
+
+  const addr = await getDeployedAddress(rc);
+
+  return addr;
 };
 
 const mintMumbaiNFT = async (nft: any, address: string) => {
