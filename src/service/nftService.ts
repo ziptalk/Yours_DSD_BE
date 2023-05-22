@@ -72,13 +72,30 @@ const saveNftInfo = async (nftDto: nftDto) => {
         image: nftDto.image,
         video: nftDto.video,
         description: nftDto.description,
-        serial_number: nftDto.serialNumber,
       },
     });
     return createdNft;
   } catch (error) {
     throw errorGenerator({
       msg: responseMessage.CREATE_NFT_INFO_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
+
+const getNftInfo = async (nftName: string) => {
+  try {
+    const nftInfo = await prisma.nft.findFirst({ where: { name: nftName } });
+    const data: nftDto = {
+      name: nftInfo?.name!,
+      image: nftInfo?.image,
+      video: nftInfo?.video,
+      description: nftInfo?.description,
+    };
+    return data;
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.GET_NFT_INFO_FAIL,
       statusCode: statusCode.DB_ERROR,
     });
   }
