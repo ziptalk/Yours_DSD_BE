@@ -1,8 +1,7 @@
 export interface nftDto {
   name: string;
-  image?: string;
-  video?: string;
-  description?: string;
-  serialNumber?: number;
-  nftAddress?: string;
+  image?: string | null;
+  video?: string | null;
+  description?: string | null;
+  nftAddress?: string | null;
 }
