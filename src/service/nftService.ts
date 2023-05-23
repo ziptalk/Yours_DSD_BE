@@ -166,6 +166,14 @@ const saveMintId = async (nftName: string, userId: number, mintId: number) => {
     });
   }
 };
+
+const getNftAddress = async (nftName: string) => {
+  const result = await prisma.nft.findFirst({
+    where: { name: nftName },
+    select: { nftAddress: true },
+  });
+  return result?.nftAddress;
+};
 export {
   saveMintInfo,
   deleteManyMintInfo,
@@ -176,4 +184,5 @@ export {
   finishLoading,
   saveNftAddress,
   saveMintId,
+  getNftAddress,
 };
