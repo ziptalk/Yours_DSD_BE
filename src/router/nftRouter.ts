@@ -40,7 +40,14 @@ router.post(
     body("receiverAddress").notEmpty(),
   ],
   errorValidator,
-  nftController.transferNft,
+  nftController.deployAndTransferNft,
+);
+
+router.delete(
+  "/burn",
+  [body("userId").notEmpty(), body("nftName").notEmpty()],
+  errorValidator,
+  nftController.deployAndBurnNft,
 );
 
 router.post("/", [body("name").notEmpty()], errorValidator, nftController.createNft);
