@@ -53,7 +53,13 @@ const getUserNftByUserId = async (userId: number) => {
   try {
     const data = await prisma.user_has_nft.findMany({
       where: { user_id: userId, deleted_at: null },
-      select: { user_id: true, name: true },
+      select: {
+        user_id: true,
+        name: true,
+        mint_id: true,
+        transaction_date: true,
+        transaction_hash: true,
+      },
     });
     return data;
   } catch (error) {
