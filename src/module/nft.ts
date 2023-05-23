@@ -80,9 +80,17 @@ const burnNft = async (nftName: string, userId: number) => {
   try {
     const nftInfo = await getNftInfo(nftName);
     const ownedNftInfo = await getUserNftInfo(nftName, userId);
-    await burnNFT(nftInfo.nftAddress, ownedNftInfo?.mint_id!);
+
+    const nftContract = new ethers.Contract(
+      nftInfo.nftAddress as string,
+      dsdBenefitData.abi,
+      polygonProvider,
+    );
+
+    await burnNFT(nftContract, ownedNftInfo?.mint_id!);
     await addBurnInfo(ownedNftInfo?.id!);
   } catch (error) {
+    console.log(error);
     throw errorGenerator({
       msg: responseMessage.BURN_NFT_FAIL_WEB2,
       statusCode: statusCode.BAD_REQUEST,

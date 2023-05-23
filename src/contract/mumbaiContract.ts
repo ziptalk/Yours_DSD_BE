@@ -78,6 +78,7 @@ const burnNFT = async (nft: any, mintId: number) => {
     const rc = await tx.wait();
     return rc;
   } catch (error) {
+    console.log(error);
     throw errorGenerator({
       msg: responseMessage.BURN_NFT_FAIL_WEB3,
       statusCode: statusCode.WEB3_ERROR,
