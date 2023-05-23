@@ -109,6 +109,22 @@ const deployAndBurnNft = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
+const modifyNft = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { name, image, video, description } = req.body;
+    const nftDto: nftDto = {
+      name,
+      image,
+      video,
+      description,
+    };
+    const data = await nftService.modifyNftInfo(nftDto);
+    return success(res, statusCode.OK, responseMessage.SUCCESS, data);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   web2Mint,
   integrateNft,
@@ -117,4 +133,5 @@ export {
   createNft,
   deployAndTransferNft,
   deployAndBurnNft,
+  modifyNft,
 };
