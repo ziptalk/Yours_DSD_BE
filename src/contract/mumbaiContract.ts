@@ -1,4 +1,5 @@
 import config from "../config";
+import { errorGenerator, responseMessage, statusCode } from "../module";
 import { getDeployedAddress } from "./commonContract";
 import deployed from "./deployed-address.json";
 import factoryData from "./DSDFactory.json";
@@ -11,40 +12,48 @@ const wallet = walletObj.connect(polygonProvider);
 const contract = new ethers.Contract(factoryAddress, factoryData.abi, polygonProvider);
 
 const deployMumbaiNFT = async (name: string | null, uri: string | null) => {
-  let rc;
   try {
+    let rc;
     const gas = await contract.connect(wallet).estimateGas.deployNFT(name, uri);
     console.log("Gas :", gas);
     const tx = await contract.connect(wallet).deployNFT(name, uri, {
       gasLimit: gas,
     });
     rc = await tx.wait();
+    const addr = await getDeployedAddress(rc);
+
+    return addr;
   } catch (error) {
-    console.log(error);
-    console.log("전체 함수 중지");
+    throw errorGenerator({
+      msg: responseMessage.DEPLOY_NFT_FAIL,
+      statusCode: statusCode.WEB3_ERROR,
+    });
   }
-
-  const addr = await getDeployedAddress(rc);
-
-  return addr;
 };
 
 const mintMumbaiNFT = async (nft: any, address: string) => {
-  const transaction = await nft.connect(wallet).mint(address);
-  const rc = await transaction.wait();
-  const event = rc.events.find((event: any) => event.event === "Mint");
-  const mintId = event.args[0].toNumber();
-  const transactionHash = event.transactionHash;
-  const block = await event.getBlock(); // check minting block timestamp
-  const date = new Date(block.timestamp * 1000);
+  try {
+    const transaction = await nft.connect(wallet).mint(address);
+    const rc = await transaction.wait();
+    const event = rc.events.find((event: any) => event.event === "Mint");
+    const mintId = event.args[0].toNumber();
+    const transactionHash = event.transactionHash;
+    const block = await event.getBlock(); // check minting block timestamp
+    const date = new Date(block.timestamp * 1000);
 
-  const data = {
-    mintId: mintId,
-    transactionHash: transactionHash,
-    date: date,
-  };
+    const data = {
+      mintId: mintId,
+      transactionHash: transactionHash,
+      date: date,
+    };
 
-  return data;
+    return data;
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.MINT_NFT_FAIL,
+      statusCode: statusCode.WEB3_ERROR,
+    });
+  }
 };
 
 const transferMumbaiNFT = async (nft: ethers.Contract, id: number, from: string, to: string) => {
@@ -57,11 +66,18 @@ const transferMumbaiNFT = async (nft: ethers.Contract, id: number, from: string,
   return data;
 };
 const burnNFT = async (nft: any, mintId: number) => {
-  const exGas = await nft.connect(wallet).estimateGas.burn(mintId);
-  console.log("expected gas:", exGas.toString(10));
-  const tx = await nft.connect(wallet).burn(mintId);
-  const rc = await tx.wait();
-  return rc;
+  try {
+    const exGas = await nft.connect(wallet).estimateGas.burn(mintId);
+    console.log("expected gas:", exGas.toString(10));
+    const tx = await nft.connect(wallet).burn(mintId);
+    const rc = await tx.wait();
+    return rc;
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.BURN_NFT_FAIL,
+      statusCode: statusCode.WEB3_ERROR,
+    });
+  }
 };
 
 export { deployMumbaiNFT, polygonProvider, mintMumbaiNFT, transferMumbaiNFT, burnNFT };
