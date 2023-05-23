@@ -2,7 +2,7 @@ import {
   deleteUserNftInfo,
   getUserNftInfo,
   integrateNft,
-  mintNft,
+  web2Mint,
 } from "../src/controller/nftController";
 import { statusCode, responseMessage } from "../src/module";
 import { nftService } from "../src/service";
@@ -31,7 +31,7 @@ describe("mintNft : api/nft/own", () => {
   const next = jest.fn();
   test("mintNft 정상 작동 테스트", async () => {
     nftService.saveMintInfo = jest.fn().mockResolvedValue(expectedData);
-    await mintNft(req, res, next);
+    await web2Mint(req, res, next);
     expect(res.status).toBeCalledWith(statusCode.OK);
     expect(res.send).toBeCalledWith(expectedResponse);
   });
