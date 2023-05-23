@@ -4,8 +4,7 @@ import statusCode from "../module/constants/statusCode";
 import { success } from "../module/util";
 import { nftService } from "../service";
 import { nftDto } from "../interface/nftDto";
-import { deployNFT, mintNft } from "../module/nft";
-import { burnNFT } from "../contract/mumbaiContract";
+import { burnNft, deployNFT, mintNft } from "../module/nft";
 const web2Mint = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, nftName } = req.body;
@@ -100,7 +99,7 @@ const deployAndBurnNft = async (req: Request, res: Response, next: NextFunction)
 
     /**nft 소각 */
     console.log(`${nftName}의 소각이 시작되었습니다.`);
-    await burnNFT(nftName, userId);
+    await burnNft(nftName, userId);
     console.log(`${nftName}의 소각이 완료되었습니다.`);
     return success(res, statusCode.OK, responseMessage.SUCCESS);
   } catch (error) {
