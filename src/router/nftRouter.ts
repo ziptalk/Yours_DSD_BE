@@ -8,38 +8,29 @@ router.post(
   "/own",
   [body("userId").notEmpty(), body("nftName").notEmpty()],
   errorValidator,
-  nftController.mintNft
+  nftController.mintNft,
 );
 
 router.post(
   "/integrate",
-  [
-    body("userId").notEmpty(),
-    body("oldNfts").notEmpty(),
-    body("newNft").notEmpty(),
-  ],
+  [body("userId").notEmpty(), body("oldNfts").notEmpty(), body("newNft").notEmpty()],
   errorValidator,
-  nftController.integrateNft
+  nftController.integrateNft,
 );
 
 router.get(
   "/own/:userId",
   [param("userId").isInt()],
   errorValidator,
-  nftController.getUserNftInfo
+  nftController.getUserNftInfo,
 );
 
 router.delete(
   "/own/:userId",
   [param("userId").isInt(), body("nfts").notEmpty()],
   errorValidator,
-  nftController.deleteUserNftInfo
+  nftController.deleteUserNftInfo,
 );
 
-router.post(
-  "/",
-  [body("name").notEmpty()],
-  errorValidator,
-  nftController.createNft
-);
+router.post("/", [body("name").notEmpty()], errorValidator, nftController.createNft);
 export default router;

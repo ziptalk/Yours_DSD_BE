@@ -56,7 +56,12 @@ const mintMumbaiNFT = async (nft: any, address: string) => {
   }
 };
 
-const transferMumbaiNFT = async (nft: ethers.Contract, id: number, from: string, to: string) => {
+const transferMumbaiNFT = async (
+  nft: ethers.Contract,
+  id: number,
+  from: string,
+  to: string,
+) => {
   const transaction = await nft.connect(wallet).transferFrom(from, to, id);
   const rc = await transaction.wait();
   const data = {

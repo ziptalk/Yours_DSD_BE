@@ -14,11 +14,7 @@ const mintNft = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const integrateNft = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const integrateNft = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, oldNfts, newNft } = req.body;
     await nftService.deleteManyMintInfo(userId, oldNfts);
@@ -29,11 +25,7 @@ const integrateNft = async (
   }
 };
 
-const getUserNftInfo = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getUserNftInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.params;
     const data = await nftService.getUserNftByUserId(+userId);
@@ -43,11 +35,7 @@ const getUserNftInfo = async (
   }
 };
 
-const deleteUserNftInfo = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const deleteUserNftInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.params;
     const { nfts } = req.body;

@@ -6,7 +6,7 @@ const errorHandler = (
   error: ErrorWithStatusCode,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const { message, statusCode } = error;
   fail(res, statusCode!, message);

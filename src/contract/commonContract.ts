@@ -5,8 +5,7 @@ import config from "../config";
 
 const ipfsId = config.ipfsId;
 const ipfsSecret = config.ipfsSecret;
-const auth =
-  "Basic " + Buffer.from(ipfsId + ":" + ipfsSecret).toString("base64");
+const auth = "Basic " + Buffer.from(ipfsId + ":" + ipfsSecret).toString("base64");
 
 const client = create({
   host: "ipfs.infura.io",
@@ -21,7 +20,7 @@ const uploadMetaIpfs = async (
   name: string | null,
   description: string | null,
   image: string | null,
-  video: string | null
+  video: string | null,
 ) => {
   let resultPath = "";
   try {
@@ -31,7 +30,7 @@ const uploadMetaIpfs = async (
         description,
         image,
         video,
-      })
+      }),
     );
     resultPath = `https://ipfs.infura.io/ipfs/${result.path}`;
     return resultPath;

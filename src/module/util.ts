@@ -1,11 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
-const success = (
-  res: Response,
-  status: number,
-  message: string,
-  data?: any
-) => {
+const success = (res: Response, status: number, message: string, data?: any) => {
   const result = {
     status,
     success: true,
