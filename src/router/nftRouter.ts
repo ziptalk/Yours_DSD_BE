@@ -8,7 +8,7 @@ router.post(
   "/own",
   [body("userId").notEmpty(), body("nftName").notEmpty()],
   errorValidator,
-  nftController.mintNft,
+  nftController.web2Mint,
 );
 
 router.post(
@@ -30,6 +30,17 @@ router.delete(
   [param("userId").isInt(), body("nfts").notEmpty()],
   errorValidator,
   nftController.deleteUserNftInfo,
+);
+
+router.post(
+  "transfer",
+  [
+    body("userId").notEmpty(),
+    body("nftName").notEmpty(),
+    body("receiverAddress").notEmpty(),
+  ],
+  errorValidator,
+  nftController.transferNft,
 );
 
 router.post("/", [body("name").notEmpty()], errorValidator, nftController.createNft);
