@@ -99,9 +99,11 @@ const deployAndBurnNft = async (req: Request, res: Response, next: NextFunction)
 
     /**nft 소각 */
     console.log(`${nftName}의 소각이 시작되었습니다.`);
-    await burnNft(nftName, userId);
+    const transactionHash = await burnNft(nftName, userId);
     console.log(`${nftName}의 소각이 완료되었습니다.`);
-    return success(res, statusCode.OK, responseMessage.SUCCESS);
+    return success(res, statusCode.OK, responseMessage.SUCCESS, {
+      transactionHash: transactionHash,
+    });
   } catch (error) {
     next(error);
   }
