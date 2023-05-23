@@ -14,16 +14,15 @@ const contract = new ethers.Contract(factoryAddress, factoryData.abi, polygonPro
 const deployMumbaiNFT = async (name: string | null, uri: string | null) => {
   try {
     let rc;
-    const gas = await contract.connect(wallet).estimateGas.deployNFT(name, uri);
-    console.log("Gas :", gas);
+    const gas = await contract.connect(wallet).estimateGas.deployNFT(name, "", uri);
     const tx = await contract.connect(wallet).deployNFT(name, uri, {
       gasLimit: gas,
     });
     rc = await tx.wait();
     const addr = await getDeployedAddress(rc);
-
     return addr;
   } catch (error) {
+    console.log(error);
     throw errorGenerator({
       msg: responseMessage.DEPLOY_NFT_FAIL,
       statusCode: statusCode.WEB3_ERROR,
