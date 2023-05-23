@@ -76,8 +76,9 @@ const transferNft = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     /**nft 민팅 */
+    console.log(`${nftName}의 민팅이 시작되었습니다.`);
     await mintNft(nftName, receiverAddress, userId);
-
+    console.log(`${nftName}의 민팅이 완료되었습니다.`);
     return success(res, statusCode.OK, responseMessage.SUCCESS);
   } catch (error) {
     next(error);
