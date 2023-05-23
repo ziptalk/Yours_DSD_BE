@@ -46,15 +46,17 @@ const deployNFT = async (nftName: string) => {
 const mintNft = async (nftName: string, receiverAddress: string, userId: number) => {
   try {
     const nftInfo = await getNftInfo(nftName);
-
     const nftContract = new ethers.Contract(
       nftInfo.nftAddress as string,
       dsdBenefitData.abi,
       polygonProvider,
     );
     const mintData = await mintMumbaiNFT(nftContract, receiverAddress);
-    await saveMintId(nftName, userId, mintData.mintId);
+    console.log(mintData);
+    await saveMintId(nftName, userId, mintData.mintId,mintData.transactionHash,mintData.date);
   } catch (error) {
+    console.log("error on nft module");
+    console.log(error);
     throw errorGenerator({
       msg: responseMessage.MINT_NFT_FAIL,
       statusCode: statusCode.BAD_REQUEST,

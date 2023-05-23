@@ -91,6 +91,7 @@ const getNftInfo = async (nftName: string) => {
       image: nftInfo?.image,
       video: nftInfo?.video,
       description: nftInfo?.description,
+      nftAddress: nftInfo?.nftAddress,
     };
     return data;
   } catch (error) {
@@ -153,11 +154,17 @@ const saveNftAddress = async (nftName: string, nftAddress: string) => {
   }
 };
 
-const saveMintId = async (nftName: string, userId: number, mintId: number) => {
+const saveMintId = async (
+  nftName: string,
+  userId: number,
+  mintId: number,
+  txHash: string,
+  txDate: Date,
+) => {
   try {
     await prisma.user_has_nft.updateMany({
       where: { user_id: userId, name: nftName },
-      data: { mint_id: mintId },
+      data: { mint_id: mintId, transaction_hash: txHash, transaction_date: txDate },
     });
   } catch (error) {
     throw errorGenerator({
