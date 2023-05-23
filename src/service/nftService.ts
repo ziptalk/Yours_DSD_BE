@@ -49,7 +49,7 @@ const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
   }
 };
 
-const getUserNftByUserId = async (userId: number) => {
+const getAllUserNftByUserId = async (userId: number) => {
   try {
     const data = await prisma.user_has_nft.findMany({
       where: { user_id: userId, deleted_at: null },
@@ -187,10 +187,44 @@ const getNftAddress = async (nftName: string) => {
   });
   return result?.nftAddress;
 };
+
+/**nft이름, userId기반 nft정보 조회 */
+const getUserNftInfo = async (nftName: string, userId: number) => {
+  try {
+    const data = await prisma.user_has_nft.findFirst({
+      where: {
+        user_id: userId,
+        name: nftName,
+        deleted_at: null,
+      },
+      select: {
+        id: true,
+        user_id: true,
+        mint_id: true,
+        transaction_hash: true,
+        transaction_date: true,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.GET_NFT_INFO_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
+
+/**소각 시 deletedAt정보 추가 */
+const addBurnInfo = async (columnId: number) => {
+  await prisma.user_has_nft.update({
+    where: { id: columnId },
+    data: { deleted_at: new Date() },
+  });
+};
 export {
   saveMintInfo,
   deleteManyMintInfo,
-  getUserNftByUserId,
+  getAllUserNftByUserId,
   saveNftInfo,
   getNftInfo,
   startLoading,
@@ -198,4 +232,6 @@ export {
   saveNftAddress,
   saveMintId,
   getNftAddress,
+  getUserNftInfo,
+  addBurnInfo,
 };
