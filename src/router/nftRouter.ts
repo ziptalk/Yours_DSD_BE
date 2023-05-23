@@ -33,7 +33,7 @@ router.delete(
 );
 
 router.post(
-  "transfer",
+  "/transfer",
   [
     body("userId").notEmpty(),
     body("nftName").notEmpty(),
