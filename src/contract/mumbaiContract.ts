@@ -48,6 +48,7 @@ const mintMumbaiNFT = async (nft: any, address: string) => {
 
     return data;
   } catch (error) {
+    console.log(error);
     throw errorGenerator({
       msg: responseMessage.MINT_NFT_FAIL,
       statusCode: statusCode.WEB3_ERROR,
