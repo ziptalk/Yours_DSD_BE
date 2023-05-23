@@ -70,7 +70,9 @@ const transferNft = async (req: Request, res: Response, next: NextFunction) => {
     /**발행 여부 확인 */
     const nftAddress = await nftService.getNftAddress(nftName);
     if (!nftAddress) {
+      console.log(`${nftName}의 발행이 시작되었습니다.`);
       await deployNFT(nftName);
+      console.log(`${nftName}의 발행이 완료되었습니다.`);
     }
 
     /**nft 민팅 */
