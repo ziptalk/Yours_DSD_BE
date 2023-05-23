@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { uploadMetaIpfs } from "../contract/commonContract";
 import {
+  burnNFT,
   deployMumbaiNFT,
   mintMumbaiNFT,
   polygonProvider,
@@ -11,11 +12,14 @@ import {
   saveMintId,
   saveNftAddress,
   startLoading,
+  getUserNftInfo,
+  addBurnInfo,
 } from "../service/nftService";
 import dsdBenefitData from "../contract/DSDBenefitNFT.json";
 import responseMessage from "./constants/responseMessage";
 import statusCode from "./constants/statusCode";
 import errorGenerator from "./error/errorGenerator";
+import { nftService } from "../service";
 
 const deployNFT = async (nftName: string) => {
   try {
@@ -36,8 +40,9 @@ const deployNFT = async (nftName: string) => {
     await saveNftAddress(nftName, deployData!.contractAddress);
     console.log("nftAddress 저장 완료");
   } catch (error) {
+    console.log(error);
     throw errorGenerator({
-      msg: responseMessage.DEPLOY_NFT_FAIL,
+      msg: responseMessage.DEPLOY_NFT_FAIL_WEB2,
       statusCode: statusCode.BAD_REQUEST,
     });
   }
@@ -53,14 +58,34 @@ const mintNft = async (nftName: string, receiverAddress: string, userId: number)
     );
     const mintData = await mintMumbaiNFT(nftContract, receiverAddress);
     console.log(mintData);
-    await saveMintId(nftName, userId, mintData.mintId,mintData.transactionHash,mintData.date);
+    await saveMintId(
+      nftName,
+      userId,
+      mintData.mintId,
+      mintData.transactionHash,
+      mintData.date,
+    );
   } catch (error) {
-    console.log("error on nft module");
     console.log(error);
     throw errorGenerator({
-      msg: responseMessage.MINT_NFT_FAIL,
+      msg: responseMessage.MINT_NFT_FAIL_WEB2,
       statusCode: statusCode.BAD_REQUEST,
     });
   }
 };
-export { deployNFT, mintNft };
+
+/**nft모듈: nft소각 */
+const burnNft = async (nftName: string, userId: number) => {
+  try {
+    const nftInfo = await getNftInfo(nftName);
+    const ownedNftInfo = await getUserNftInfo(nftName, userId);
+    await burnNFT(nftInfo.nftAddress, ownedNftInfo?.mint_id!);
+    await addBurnInfo(ownedNftInfo?.id!);
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.BURN_NFT_FAIL_WEB2,
+      statusCode: statusCode.BAD_REQUEST,
+    });
+  }
+};
+export { deployNFT, mintNft, burnNft };
