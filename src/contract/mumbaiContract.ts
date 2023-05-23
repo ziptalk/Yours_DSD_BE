@@ -24,7 +24,7 @@ const deployMumbaiNFT = async (name: string | null, uri: string | null) => {
   } catch (error) {
     console.log(error);
     throw errorGenerator({
-      msg: responseMessage.DEPLOY_NFT_FAIL,
+      msg: responseMessage.DEPLOY_NFT_FAIL_WEB3,
       statusCode: statusCode.WEB3_ERROR,
     });
   }
@@ -50,7 +50,7 @@ const mintMumbaiNFT = async (nft: any, address: string) => {
   } catch (error) {
     console.log(error);
     throw errorGenerator({
-      msg: responseMessage.MINT_NFT_FAIL,
+      msg: responseMessage.MINT_NFT_FAIL_WEB3,
       statusCode: statusCode.WEB3_ERROR,
     });
   }
@@ -79,7 +79,7 @@ const burnNFT = async (nft: any, mintId: number) => {
     return rc;
   } catch (error) {
     throw errorGenerator({
-      msg: responseMessage.BURN_NFT_FAIL,
+      msg: responseMessage.BURN_NFT_FAIL_WEB3,
       statusCode: statusCode.WEB3_ERROR,
     });
   }
