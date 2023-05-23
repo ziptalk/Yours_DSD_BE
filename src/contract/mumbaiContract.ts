@@ -8,11 +8,7 @@ const factoryAddress = deployed.DSDFactory;
 const polygonProvider = new ethers.providers.JsonRpcProvider(config.mumbaiRPC);
 const walletObj = new ethers.Wallet(config.walletSecretKey);
 const wallet = walletObj.connect(polygonProvider);
-const contract = new ethers.Contract(
-  factoryAddress,
-  factoryData.abi,
-  polygonProvider
-);
+const contract = new ethers.Contract(factoryAddress, factoryData.abi, polygonProvider);
 
 const deployMumbaiNFT = async (name: string | null, uri: string | null) => {
   let rc;
@@ -51,12 +47,7 @@ const mintMumbaiNFT = async (nft: any, address: string) => {
   return data;
 };
 
-const transferMumbaiNFT = async (
-  nft: ethers.Contract,
-  id: number,
-  from: string,
-  to: string
-) => {
+const transferMumbaiNFT = async (nft: ethers.Contract, id: number, from: string, to: string) => {
   const transaction = await nft.connect(wallet).transferFrom(from, to, id);
   const rc = await transaction.wait();
   const data = {
@@ -65,5 +56,12 @@ const transferMumbaiNFT = async (
 
   return data;
 };
+const burnNFT = async (nft: any, mintId: number) => {
+  const exGas = await nft.connect(wallet).estimateGas.burn(mintId);
+  console.log("expected gas:", exGas.toString(10));
+  const tx = await nft.connect(wallet).burn(mintId);
+  const rc = await tx.wait();
+  return rc;
+};
 
-export { deployMumbaiNFT, polygonProvider, mintMumbaiNFT, transferMumbaiNFT };
+export { deployMumbaiNFT, polygonProvider, mintMumbaiNFT, transferMumbaiNFT, burnNFT };
