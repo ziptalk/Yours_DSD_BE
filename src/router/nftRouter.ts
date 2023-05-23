@@ -51,4 +51,6 @@ router.delete(
 );
 
 router.post("/", [body("name").notEmpty()], errorValidator, nftController.createNft);
+
+router.put("/", errorValidator, nftController.modifyNft);
 export default router;
