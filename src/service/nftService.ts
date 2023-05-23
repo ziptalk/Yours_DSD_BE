@@ -222,6 +222,26 @@ const addBurnInfo = async (columnId: number) => {
     data: { deleted_at: new Date() },
   });
 };
+
+const modifyNftInfo = async (nftDto: nftDto) => {
+  try {
+    const modifiedNft = await prisma.nft.update({
+      where: { name: nftDto.name },
+      data: {
+        image: nftDto.image,
+        video: nftDto.video,
+        description: nftDto.description,
+      },
+    });
+    return modifiedNft;
+  } catch (error) {
+    console.log(error);
+    throw errorGenerator({
+      msg: responseMessage.MODIFY_NFT_INFO_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
 export {
   saveMintInfo,
   deleteManyMintInfo,
@@ -235,4 +255,5 @@ export {
   getNftAddress,
   getUserNftInfo,
   addBurnInfo,
+  modifyNftInfo,
 };
