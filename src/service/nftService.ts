@@ -152,6 +152,17 @@ const saveNftAddress = async (nftName: string, nftAddress: string) => {
     });
   }
 };
+
+const saveMintId = async (nftName: string, userId: number, mintId: number) => {
+  try {
+    await prisma.user_has_nft.updateMany({ where: { user_id: userId, name: nftName }, data: { mint_id: mintId } });
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.SAVE_MINT_ID_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
 export {
   saveMintInfo,
   deleteManyMintInfo,
@@ -161,4 +172,5 @@ export {
   startLoading,
   finishLoading,
   saveNftAddress,
+  saveMintId,
 };
