@@ -19,8 +19,8 @@ import dsdBenefitData from "../contract/DSDBenefitNFT.json";
 import responseMessage from "./constants/responseMessage";
 import statusCode from "./constants/statusCode";
 import errorGenerator from "./error/errorGenerator";
-import { nftService } from "../service";
 
+/**nft모듈: nft발행 */
 const deployNFT = async (nftName: string) => {
   try {
     const nftInfo = await getNftInfo(nftName);
@@ -48,6 +48,7 @@ const deployNFT = async (nftName: string) => {
   }
 };
 
+/**nft모듈: nft민팅 */
 const mintNft = async (nftName: string, receiverAddress: string, userId: number) => {
   try {
     const nftInfo = await getNftInfo(nftName);
