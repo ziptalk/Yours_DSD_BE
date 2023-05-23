@@ -49,6 +49,7 @@ const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
   }
 };
 
+/**userId기반 모든 유저 소유 nft정보 조회 */
 const getAllUserNftByUserId = async (userId: number) => {
   try {
     const data = await prisma.user_has_nft.findMany({
@@ -88,7 +89,7 @@ const saveNftInfo = async (nftDto: nftDto) => {
     });
   }
 };
-
+/**nft이름 기반 nft 정보 조회 */
 const getNftInfo = async (nftName: string) => {
   try {
     const nftInfo = await prisma.nft.findFirst({ where: { name: nftName } });
