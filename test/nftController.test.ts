@@ -1,6 +1,6 @@
 import {
   deleteUserNftInfo,
-  getUserNftInfo,
+  getAllUserNftInfo,
   integrateNft,
   web2Mint,
 } from "../src/controller/nftController";
@@ -86,8 +86,8 @@ describe("getUserNftInfo api/nft/own/:userId", () => {
 
   const next = jest.fn();
   test("getUserNftInfo 정상 작동 테스트", async () => {
-    nftService.getUserNftByUserId = jest.fn();
-    await getUserNftInfo(req, res, next);
+    nftService.getAllUserNftByUserId = jest.fn();
+    await getAllUserNftInfo(req, res, next);
     expect(res.status).toBeCalledWith(statusCode.OK);
   });
 });

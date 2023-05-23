@@ -22,7 +22,7 @@ router.get(
   "/own/:userId",
   [param("userId").isInt()],
   errorValidator,
-  nftController.getUserNftInfo,
+  nftController.getAllUserNftInfo,
 );
 
 router.delete(

@@ -27,10 +27,10 @@ const integrateNft = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
-const getUserNftInfo = async (req: Request, res: Response, next: NextFunction) => {
+const getAllUserNftInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.params;
-    const data = await nftService.getUserNftByUserId(+userId);
+    const data = await nftService.getAllUserNftByUserId(+userId);
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
@@ -111,7 +111,7 @@ const deployAndBurnNft = async (req: Request, res: Response, next: NextFunction)
 export {
   web2Mint,
   integrateNft,
-  getUserNftInfo,
+  getAllUserNftInfo,
   deleteUserNftInfo,
   createNft,
   deployAndTransferNft,
