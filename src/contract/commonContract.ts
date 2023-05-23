@@ -35,37 +35,48 @@ const uploadMetaIpfs = async (
     resultPath = `https://ipfs.infura.io/ipfs/${result.path}`;
     return resultPath;
   } catch (error) {
+    console.log("error on uploadMetaIpfs");
     console.log(error);
     return responseMessage.META_ERROR;
   }
 };
 
 const getDeployedAddress = async (transaction: ethers.Contract) => {
-  const rc = await transaction.wait();
-  const event = rc.events.find((event: any) => event.event === "DeployNFT");
-  const [clone, owner] = event.args;
-  const transactionHash = event.transactionHash;
-  const block = await event.getBlock(); // check minting block timestamp
-  const date = new Date(block.timestamp * 1000);
+  try {
+    const rc = transaction;
+    const event = rc.events.find((event: any) => event.event === "DeployNFT");
+    const [clone, owner] = event.args;
+    const transactionHash = event.transactionHash;
+    const block = await event.getBlock(); // check minting block timestamp
+    const date = new Date(block.timestamp * 1000);
 
-  const data = {
-    contractAddress: clone,
-    transactionHash: transactionHash,
-    date: date,
-  };
+    const data = {
+      contractAddress: clone,
+      transactionHash: transactionHash,
+      date: date,
+    };
 
-  return data;
+    return data;
+  } catch (error) {
+    console.log("error on getDeployedAddress");
+    console.log(error);
+  }
 };
 
 const getMethods = (data: any) => {
-  data.abi.map((value: any) => {
-    let methodData = value.name + "(";
-    value.inputs.map((value1: any) => {
-      methodData += "(" + value1.type + " " + value1.name + ")";
+  try {
+    data.abi.map((value: any) => {
+      let methodData = value.name + "(";
+      value.inputs.map((value1: any) => {
+        methodData += "(" + value1.type + " " + value1.name + ")";
+      });
+      methodData += ");";
+      console.log(methodData);
     });
-    methodData += ");";
-    console.log(methodData);
-  });
+  } catch (error) {
+    console.log("error on getMethods");
+    console.log(error);
+  }
 };
 
 export { uploadMetaIpfs, getDeployedAddress, getMethods };
