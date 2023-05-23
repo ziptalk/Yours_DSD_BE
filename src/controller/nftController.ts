@@ -4,7 +4,8 @@ import statusCode from "../module/constants/statusCode";
 import { success } from "../module/util";
 import { nftService } from "../service";
 import { nftDto } from "../interface/nftDto";
-const mintNft = async (req: Request, res: Response, next: NextFunction) => {
+import { deployNFT, mintNft } from "../module/nft";
+const web2Mint = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, nftName } = req.body;
     const data = await nftService.saveMintInfo(+userId, nftName);
@@ -62,4 +63,30 @@ const createNft = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { mintNft, integrateNft, getUserNftInfo, deleteUserNftInfo, createNft };
+const transferNft = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId, nftName, receiverAddress } = req.body;
+
+    /**발행 여부 확인 */
+    const nftAddress = await nftService.getNftAddress(nftName);
+    if (!nftAddress) {
+      await deployNFT(nftName);
+    }
+
+    /**nft 민팅 */
+    await mintNft(nftName, receiverAddress, userId);
+
+    return success(res, statusCode.OK, responseMessage.SUCCESS);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  web2Mint,
+  integrateNft,
+  getUserNftInfo,
+  deleteUserNftInfo,
+  createNft,
+  transferNft,
+};
