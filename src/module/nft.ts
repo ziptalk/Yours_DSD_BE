@@ -87,8 +87,9 @@ const burnNft = async (nftName: string, userId: number) => {
       polygonProvider,
     );
 
-    await burnNFT(nftContract, ownedNftInfo?.mint_id!);
+    const burnInfo = await burnNFT(nftContract, ownedNftInfo?.mint_id!);
     await addBurnInfo(ownedNftInfo?.id!);
+    return burnInfo.transactionHash;
   } catch (error) {
     console.log(error);
     throw errorGenerator({
