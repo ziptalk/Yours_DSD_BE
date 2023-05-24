@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "buildOnly": "tsc",
+    "buildAndRun": "tsc && node dist/app.js",
     "prisma:development": "dotenv -e .env.development npx prisma db pull & dotenv -e .env.development npx prisma generate",
     "prisma:production": "dotenv -e .env.production npx prisma db pull & dotenv -e .env.production npx prisma generate",
     "tsnode:development": "dotenv -e .env.development ts-node src/app",
