@@ -53,7 +53,7 @@ const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
 const getAllUserNftByUserId = async (userId: number) => {
   try {
     const data = await prisma.user_has_nft.findMany({
-      where: { user_id: userId, deleted_at: null },
+      where: { user_id: userId, deleted_at: null, transaction_hash: null },
       select: {
         user_id: true,
         name: true,
