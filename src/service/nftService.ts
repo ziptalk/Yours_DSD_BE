@@ -109,7 +109,7 @@ const getNftInfo = async (nftName: string) => {
   }
 };
 
-const startLoading = async (nftName: string) => {
+const startDeploy = async (nftName: string) => {
   try {
     await prisma.nft.update({
       where: {
@@ -127,7 +127,7 @@ const startLoading = async (nftName: string) => {
   }
 };
 
-const finishLoading = async (nftName: string) => {
+const finishDeploy = async (nftName: string) => {
   try {
     await prisma.nft.update({
       where: {
@@ -288,8 +288,8 @@ export {
   getAllUserNftByUserId,
   saveNftInfo,
   getNftInfo,
-  startLoading,
-  finishLoading,
+  startDeploy,
+  finishDeploy,
   saveNftAddress,
   saveMintId,
   getNftAddress,
