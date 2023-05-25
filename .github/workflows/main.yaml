@@ -20,7 +20,7 @@ jobs:
             npx pm2 kill
             rm -rf dist
             git pull origin main
-            npx yarn add
+            npx yarn install
             npx prisma generate
             npx yarn run buildOnly
             npx pm2 start dist/app.js
