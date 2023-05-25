@@ -36,4 +36,5 @@ export default {
 
   INSUFFICIENT_NFT: "충분한 nft를 보유하고 있지 않습니다",
   UNPUBLISHED_NFT: "발행되지 않은 nft입니다.",
+  INVALID_NFT: "존재하지 않는 nft입니다.",
 };
