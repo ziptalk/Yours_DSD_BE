@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import responseMessage from "../module/constants/responseMessage";
 import statusCode from "../module/constants/statusCode";
-import { success } from "../module/util";
+import { fail, success } from "../module/util";
 import { nftService } from "../service";
 import { nftDto } from "../interface/nftDto";
 import { burnNft, deployNFT, mintNft } from "../module/nft";
+import { uploadMetaIpfs } from "../contract/commonContract";
+import { setUri } from "../contract/mumbaiContract";
 const web2Mint = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, nftName } = req.body;
@@ -125,6 +127,28 @@ const modifyNft = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { name, image, video, description } = req.body;
+    const nftDto: nftDto = {
+      name,
+      image,
+      video,
+      description,
+    };
+    const data = await nftService.modifyNftInfo(nftDto);
+    const nftAddress = await nftService.getNftAddress(name);
+    if (!nftAddress) {
+      return fail(res, statusCode.NOT_FOUND, responseMessage.UNPUBLISHED_NFT);
+    }
+    const newUri = await uploadMetaIpfs(name, description, image, video);
+    await setUri(newUri, nftAddress);
+    return success(res, statusCode.OK, responseMessage.SUCCESS);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   web2Mint,
   integrateNft,
@@ -134,4 +158,5 @@ export {
   deployAndTransferNft,
   deployAndBurnNft,
   modifyNft,
+  modifyDeployedNftData,
 };
