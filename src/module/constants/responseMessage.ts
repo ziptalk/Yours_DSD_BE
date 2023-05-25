@@ -15,6 +15,7 @@ export default {
   DEPLOY_NFT_FAIL_WEB3: "[WEB3]nft 발행 중 에러가 발생하였습니다.",
   MINT_NFT_FAIL_WEB3: "[WEB3]nft 민팅 중 에러가 발생하였습니다.",
   BURN_NFT_FAIL_WEB3: "[WEB3]nft 소각 중 에러가 발생하였습니다.",
+  SET_NFT_URI_FAIL_WEB3: "[WEB3]nft 메타데이터 변경 중 에러가 발생하였습니다.",
 
   /**
    * Web 2
