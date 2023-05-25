@@ -264,6 +264,24 @@ const checkDeployedState = async (nftName: string) => {
     throw error;
   }
 };
+
+const checkLoadingState = async (nftName: string) => {
+  try {
+    const data = await prisma.user_has_nft.findFirst({
+      where: {
+        name: nftName,
+      },
+    });
+    if (data?.is_Loading) {
+      throw errorGenerator({
+        msg: responseMessage.IS_LOADING_NFT,
+        statusCode: statusCode.BAD_REQUEST,
+      });
+    }
+  } catch (error) {
+    throw error;
+  }
+};
 export {
   saveMintInfo,
   deleteManyMintInfo,
@@ -279,4 +297,5 @@ export {
   addBurnInfo,
   modifyNftInfo,
   checkDeployedState,
+  checkLoadingState,
 };
