@@ -136,14 +136,14 @@ const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunc
       video,
       description,
     };
-    const data = await nftService.modifyNftInfo(nftDto);
+    await nftService.modifyNftInfo(nftDto);
     const nftAddress = await nftService.getNftAddress(name);
     if (!nftAddress) {
       return fail(res, statusCode.NOT_FOUND, responseMessage.UNPUBLISHED_NFT);
     }
     const newUri = await uploadMetaIpfs(name, description, image, video);
-    await setUri(newUri, nftAddress);
-    return success(res, statusCode.OK, responseMessage.SUCCESS);
+    const data = await setUri(newUri, nftAddress);
+    return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
   }
