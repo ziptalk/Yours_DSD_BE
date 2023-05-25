@@ -145,6 +145,48 @@ const finishDeploy = async (nftName: string) => {
   }
 };
 
+const startLoading = async (nftName: string, userId: number) => {
+  try {
+    const nft = await prisma.user_has_nft.findFirst({
+      where: { name: nftName, user_id: userId },
+    });
+    await prisma.user_has_nft.update({
+      where: {
+        id: nft?.id,
+      },
+      data: {
+        is_Loading: true,
+      },
+    });
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.START_LOADING_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
+
+const finishLoading = async (nftName: string, userId: number) => {
+  try {
+    const nft = await prisma.user_has_nft.findFirst({
+      where: { name: nftName, user_id: userId },
+    });
+    await prisma.user_has_nft.update({
+      where: {
+        id: nft?.id,
+      },
+      data: {
+        is_Loading: false,
+      },
+    });
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.FINISH_LOADING_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
+
 const saveNftAddress = async (nftName: string, nftAddress: string) => {
   try {
     await prisma.nft.update({
@@ -298,4 +340,6 @@ export {
   modifyNftInfo,
   checkDeployedState,
   checkLoadingState,
+  startLoading,
+  finishLoading,
 };
