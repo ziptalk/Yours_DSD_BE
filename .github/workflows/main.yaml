@@ -1,0 +1,26 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+jobs:
+  AUTO_DEPLOY:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run scripts in server
+        uses: appleboy/ssh-action@master
+        with:
+          password: ${{ secrets.EC2_PASSWORD }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          script: |
+            cd DSD/
+            npx pm2 kill
+            rm -rf dist
+            git pull origin main
+            npx npm i
+            npx prisma generate
+            npx npm run buildOnly
+            npx pm2 start dist/app.js
