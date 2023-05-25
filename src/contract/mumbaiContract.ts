@@ -3,6 +3,7 @@ import { errorGenerator, responseMessage, statusCode } from "../module";
 import { getDeployedAddress } from "./commonContract";
 import deployed from "./deployed-address.json";
 import factoryData from "./DSDFactory.json";
+import benefitData from "./DSDBenefitNFT.json";
 import { ethers } from "ethers";
 
 const factoryAddress = deployed.DSDFactory;
@@ -15,7 +16,7 @@ const deployMumbaiNFT = async (name: string | null, uri: string | null) => {
   try {
     let rc;
     const gas = await contract.connect(wallet).estimateGas.deployNFT(name, "", uri);
-    const tx = await contract.connect(wallet).deployNFT(name, uri, {
+    const tx = await contract.connect(wallet).deployNFT(name, "", uri, {
       gasLimit: gas,
     });
     rc = await tx.wait();
@@ -86,4 +87,31 @@ const burnNFT = async (nft: any, mintId: number) => {
   }
 };
 
-export { deployMumbaiNFT, polygonProvider, mintMumbaiNFT, transferMumbaiNFT, burnNFT };
+const setUri = async (uri: string, nftAddress: string) => {
+  try {
+    const contract = new ethers.Contract(nftAddress, benefitData.abi, polygonProvider);
+    let rc;
+    const gas = await contract.connect(wallet).estimateGas.setURI(uri);
+    const tx = await contract.connect(wallet).setURI(uri, {
+      gasLimit: gas,
+    });
+    rc = await tx.wait();
+    const addr = await getDeployedAddress(rc);
+    return addr;
+  } catch (error) {
+    console.log(error);
+    throw errorGenerator({
+      msg: responseMessage.SET_NFT_URI_FAIL_WEB3,
+      statusCode: statusCode.WEB3_ERROR,
+    });
+  }
+};
+
+export {
+  deployMumbaiNFT,
+  polygonProvider,
+  mintMumbaiNFT,
+  transferMumbaiNFT,
+  burnNFT,
+  setUri,
+};
