@@ -20,7 +20,7 @@ jobs:
             npx pm2 kill
             rm -rf dist
             git pull origin main
-            npx npm i
+            npm i
             npx prisma generate
-            npx npm run buildOnly
+            npm run buildOnly
             npx pm2 start dist/app.js
