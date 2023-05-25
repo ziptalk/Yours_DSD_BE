@@ -52,5 +52,28 @@ router.delete(
 
 router.post("/", [body("name").notEmpty()], errorValidator, nftController.createNft);
 
-router.put("/", errorValidator, nftController.modifyNft);
+/**WEB2 nft정보 수정 */
+router.put(
+  "/",
+  [
+    body("name").notEmpty(),
+    body("image").notEmpty(),
+    body("video").notEmpty(),
+    body("description").notEmpty(),
+  ],
+  errorValidator,
+  nftController.modifyNft,
+);
+/**WEB3 nft 정보 수정 */
+router.put(
+  "/publish",
+  [
+    body("name").notEmpty(),
+    body("image").notEmpty(),
+    body("video").notEmpty(),
+    body("description").notEmpty(),
+  ],
+  errorValidator,
+  nftController.modifyDeployedNftData,
+);
 export default router;
