@@ -14,6 +14,7 @@ import {
   startLoading,
   getUserNftInfo,
   addBurnInfo,
+  checkDeployedState,
 } from "../service/nftService";
 import dsdBenefitData from "../contract/DSDBenefitNFT.json";
 import responseMessage from "./constants/responseMessage";
@@ -23,6 +24,7 @@ import errorGenerator from "./error/errorGenerator";
 /**nft모듈: nft발행 */
 const deployNFT = async (nftName: string) => {
   try {
+    await checkDeployedState(nftName);
     const nftInfo = await getNftInfo(nftName);
     const metaUri = await uploadMetaIpfs(
       nftInfo.name,
