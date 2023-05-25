@@ -20,6 +20,7 @@ import dsdBenefitData from "../contract/DSDBenefitNFT.json";
 import responseMessage from "./constants/responseMessage";
 import statusCode from "./constants/statusCode";
 import errorGenerator from "./error/errorGenerator";
+import { nftService } from "../service";
 
 /**nft모듈: nft발행 */
 const deployNFT = async (nftName: string) => {
@@ -52,29 +53,28 @@ const deployNFT = async (nftName: string) => {
 
 /**nft모듈: nft민팅 */
 const mintNft = async (nftName: string, receiverAddress: string, userId: number) => {
-  try {
-    const nftInfo = await getNftInfo(nftName);
-    const nftContract = new ethers.Contract(
-      nftInfo.nftAddress as string,
-      dsdBenefitData.abi,
-      polygonProvider,
-    );
-    const mintData = await mintMumbaiNFT(nftContract, receiverAddress);
-    console.log(mintData);
-    await saveMintId(
-      nftName,
-      userId,
-      mintData.mintId,
-      mintData.transactionHash,
-      mintData.date,
-    );
-  } catch (error) {
-    console.log(error);
+  /**web2상에서 가지고있는지 체크하고 가지고있으면 민팅 시작.*/
+  const userNft = await nftService.getUserNftInfo(nftName, userId);
+  if (!userNft) {
     throw errorGenerator({
-      msg: responseMessage.MINT_NFT_FAIL_WEB2,
+      msg: responseMessage.INSUFFICIENT_NFT,
       statusCode: statusCode.BAD_REQUEST,
     });
   }
+  const nftInfo = await getNftInfo(nftName);
+  const nftContract = new ethers.Contract(
+    nftInfo.nftAddress as string,
+    dsdBenefitData.abi,
+    polygonProvider,
+  );
+  const mintData = await mintMumbaiNFT(nftContract, receiverAddress);
+  console.log(mintData);
+  await nftService.saveMintId(
+    userNft.id,
+    mintData.mintId,
+    mintData.transactionHash,
+    mintData.date,
+  );
 };
 
 /**nft모듈: nft소각 */
