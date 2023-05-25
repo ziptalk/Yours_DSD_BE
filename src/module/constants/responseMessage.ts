@@ -15,6 +15,7 @@ export default {
   DEPLOY_NFT_FAIL_WEB3: "[WEB3]nft 발행 중 에러가 발생하였습니다.",
   MINT_NFT_FAIL_WEB3: "[WEB3]nft 민팅 중 에러가 발생하였습니다.",
   BURN_NFT_FAIL_WEB3: "[WEB3]nft 소각 중 에러가 발생하였습니다.",
+  SET_NFT_URI_FAIL_WEB3: "[WEB3]nft 메타데이터 변경 중 에러가 발생하였습니다.",
 
   /**
    * Web 2
@@ -34,4 +35,6 @@ export default {
   FINISH_LOADING_FAIL: "nft발행을 끝내는데 실패하였습니다.",
 
   INSUFFICIENT_NFT: "충분한 nft를 보유하고 있지 않습니다",
+  UNPUBLISHED_NFT: "발행되지 않은 nft입니다.",
+  INVALID_NFT: "존재하지 않는 nft입니다.",
 };

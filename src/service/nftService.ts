@@ -225,6 +225,10 @@ const addBurnInfo = async (columnId: number) => {
 
 const modifyNftInfo = async (nftDto: nftDto) => {
   try {
+    const nft = await prisma.nft.findFirst({ where: { name: nftDto.name } });
+    if (!nft) {
+      throw Error;
+    }
     const modifiedNft = await prisma.nft.update({
       where: { name: nftDto.name },
       data: {
@@ -237,8 +241,8 @@ const modifyNftInfo = async (nftDto: nftDto) => {
   } catch (error) {
     console.log(error);
     throw errorGenerator({
-      msg: responseMessage.MODIFY_NFT_INFO_FAIL,
-      statusCode: statusCode.DB_ERROR,
+      msg: responseMessage.INVALID_NFT,
+      statusCode: statusCode.NOT_FOUND,
     });
   }
 };
