@@ -7,11 +7,11 @@ import {
   polygonProvider,
 } from "../contract/mumbaiContract";
 import {
-  finishLoading,
+  finishDeploy,
   getNftInfo,
   saveMintId,
   saveNftAddress,
-  startLoading,
+  startDeploy,
   getUserNftInfo,
   addBurnInfo,
   checkDeployedState,
@@ -35,10 +35,10 @@ const deployNFT = async (nftName: string) => {
     console.log("ipfs에 정보 업로드 완료", JSON.stringify(metaUri, null, 4));
 
     /**nft 발행 시작 */
-    await startLoading(nftName);
+    await startDeploy(nftName);
     const deployData = await deployMumbaiNFT(nftInfo.name, metaUri);
     console.log("deploy NFT 완료");
-    await finishLoading(nftName);
+    await finishDeploy(nftName);
     await saveNftAddress(nftName, deployData!.contractAddress);
     console.log("nftAddress 저장 완료");
   } catch (error) {
