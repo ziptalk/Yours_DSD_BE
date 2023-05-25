@@ -246,6 +246,24 @@ const modifyNftInfo = async (nftDto: nftDto) => {
     });
   }
 };
+
+const checkDeployedState = async (nftName: string) => {
+  try {
+    const data = await prisma.nft.findFirst({
+      where: {
+        name: nftName,
+      },
+    });
+    if (data?.isLoading) {
+      throw errorGenerator({
+        msg: responseMessage.IS_LOADING_NFT,
+        statusCode: statusCode.BAD_REQUEST,
+      });
+    }
+  } catch (error) {
+    throw error;
+  }
+};
 export {
   saveMintInfo,
   deleteManyMintInfo,
@@ -260,4 +278,5 @@ export {
   getUserNftInfo,
   addBurnInfo,
   modifyNftInfo,
+  checkDeployedState,
 };
