@@ -96,8 +96,10 @@ const setUri = async (uri: string, nftAddress: string) => {
       gasLimit: gas,
     });
     rc = await tx.wait();
-    const addr = await getDeployedAddress(rc);
-    return addr;
+    const data = {
+      transactionHash: rc.transactionHash,
+    };
+    return data;
   } catch (error) {
     console.log(error);
     throw errorGenerator({
