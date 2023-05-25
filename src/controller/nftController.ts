@@ -136,6 +136,7 @@ const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunc
       video,
       description,
     };
+    await nftService.startDeploy(name);
     await nftService.modifyNftInfo(nftDto);
     const nftAddress = await nftService.getNftAddress(name);
     if (!nftAddress) {
@@ -143,6 +144,7 @@ const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunc
     }
     const newUri = await uploadMetaIpfs(name, description, image, video);
     const data = await setUri(newUri, nftAddress);
+    await nftService.finishDeploy(name);
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
