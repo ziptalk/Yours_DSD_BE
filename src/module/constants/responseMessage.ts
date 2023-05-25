@@ -35,4 +35,5 @@ export default {
   FINISH_LOADING_FAIL: "nft발행을 끝내는데 실패하였습니다.",
 
   INSUFFICIENT_NFT: "충분한 nft를 보유하고 있지 않습니다",
+  UNPUBLISHED_NFT: "발행되지 않은 nft입니다.",
 };
