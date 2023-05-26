@@ -145,10 +145,10 @@ const finishDeploy = async (nftName: string) => {
   }
 };
 
-const startLoading = async (nftName: string, userId: number) => {
+const startLoading = async (id: number) => {
   try {
     const nft = await prisma.user_has_nft.findFirst({
-      where: { name: nftName, user_id: userId },
+      where: { id },
     });
     await prisma.user_has_nft.update({
       where: {
@@ -166,10 +166,10 @@ const startLoading = async (nftName: string, userId: number) => {
   }
 };
 
-const finishLoading = async (nftName: string, userId: number) => {
+const finishLoading = async (id: number) => {
   try {
     const nft = await prisma.user_has_nft.findFirst({
-      where: { name: nftName, user_id: userId },
+      where: { id },
     });
     await prisma.user_has_nft.update({
       where: {
