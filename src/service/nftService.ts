@@ -203,16 +203,10 @@ const saveNftAddress = async (nftName: string, nftAddress: string) => {
   }
 };
 
-const saveMintId = async (
-  nftName: string,
-  userId: number,
-  mintId: number,
-  txHash: string,
-  txDate: Date,
-) => {
+const saveMintId = async (id: number, mintId: number, txHash: string, txDate: Date) => {
   try {
-    await prisma.user_has_nft.updateMany({
-      where: { user_id: userId, name: nftName },
+    await prisma.user_has_nft.update({
+      where: { id },
       data: { mint_id: mintId, transaction_hash: txHash, transaction_date: txDate },
     });
   } catch (error) {
@@ -307,11 +301,11 @@ const checkDeployedState = async (nftName: string) => {
   }
 };
 
-const checkLoadingState = async (nftName: string) => {
+const checkLoadingState = async (id: number) => {
   try {
     const data = await prisma.user_has_nft.findFirst({
       where: {
-        name: nftName,
+        id,
       },
     });
     if (data?.is_Loading) {
