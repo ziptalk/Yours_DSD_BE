@@ -91,22 +91,21 @@ const saveNftInfo = async (nftDto: nftDto) => {
 };
 /**nft이름 기반 nft 정보 조회 */
 const getNftInfo = async (nftName: string) => {
-  try {
-    const nftInfo = await prisma.nft.findFirst({ where: { name: nftName } });
-    const data: nftDto = {
-      name: nftInfo?.name!,
-      image: nftInfo?.image,
-      video: nftInfo?.video,
-      description: nftInfo?.description,
-      nftAddress: nftInfo?.nftAddress,
-    };
-    return data;
-  } catch (error) {
+  const nftInfo = await prisma.nft.findFirst({ where: { name: nftName } });
+  if (!nftInfo) {
     throw errorGenerator({
-      msg: responseMessage.GET_NFT_INFO_FAIL,
+      msg: responseMessage.INVALID_NFT,
       statusCode: statusCode.DB_ERROR,
     });
   }
+  const data: nftDto = {
+    name: nftInfo?.name!,
+    image: nftInfo?.image,
+    video: nftInfo?.video,
+    description: nftInfo?.description,
+    nftAddress: nftInfo?.nftAddress,
+  };
+  return data;
 };
 
 const startDeploy = async (nftName: string) => {
