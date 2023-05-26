@@ -330,20 +330,16 @@ const checkDeployedState = async (nftName: string) => {
 };
 
 const checkLoadingState = async (id: number) => {
-  try {
-    const data = await prisma.user_has_nft.findFirst({
-      where: {
-        id,
-      },
+  const data = await prisma.user_has_nft.findFirst({
+    where: {
+      id,
+    },
+  });
+  if (data?.is_Loading) {
+    throw errorGenerator({
+      msg: responseMessage.IS_LOADING_NFT,
+      statusCode: statusCode.BAD_REQUEST,
     });
-    if (data?.is_Loading) {
-      throw errorGenerator({
-        msg: responseMessage.IS_LOADING_NFT,
-        statusCode: statusCode.BAD_REQUEST,
-      });
-    }
-  } catch (error) {
-    throw error;
   }
 };
 export {
