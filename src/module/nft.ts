@@ -6,16 +6,6 @@ import {
   mintMumbaiNFT,
   polygonProvider,
 } from "../contract/mumbaiContract";
-import {
-  finishDeploy,
-  getNftInfo,
-  saveMintId,
-  saveNftAddress,
-  startDeploy,
-  getUserNftInfo,
-  addBurnInfo,
-  checkDeployedState,
-} from "../service/nftService";
 import dsdBenefitData from "../contract/DSDBenefitNFT.json";
 import responseMessage from "./constants/responseMessage";
 import statusCode from "./constants/statusCode";
@@ -25,8 +15,8 @@ import { nftService } from "../service";
 /**nft모듈: nft발행 */
 const deployNFT = async (nftName: string) => {
   try {
-    await checkDeployedState(nftName);
-    const nftInfo = await getNftInfo(nftName);
+    await nftService.checkDeployedState(nftName);
+    const nftInfo = await nftService.getNftInfo(nftName);
     const metaUri = await uploadMetaIpfs(
       nftInfo.name,
       nftInfo.description!,
@@ -36,11 +26,11 @@ const deployNFT = async (nftName: string) => {
     console.log("ipfs에 정보 업로드 완료", JSON.stringify(metaUri, null, 4));
 
     /**nft 발행 시작 */
-    await startDeploy(nftName);
+    await nftService.startDeploy(nftName);
     const deployData = await deployMumbaiNFT(nftInfo.name, metaUri);
     console.log("deploy NFT 완료");
-    await finishDeploy(nftName);
-    await saveNftAddress(nftName, deployData!.contractAddress);
+    await nftService.finishDeploy(nftName);
+    await nftService.saveNftAddress(nftName, deployData!.contractAddress);
     console.log("nftAddress 저장 완료");
   } catch (error) {
     console.log(error);
@@ -61,7 +51,7 @@ const mintNft = async (nftName: string, receiverAddress: string, userId: number)
       statusCode: statusCode.BAD_REQUEST,
     });
   }
-  const nftInfo = await getNftInfo(nftName);
+  const nftInfo = await nftService.getNftInfo(nftName);
   const nftContract = new ethers.Contract(
     nftInfo.nftAddress as string,
     dsdBenefitData.abi,
@@ -80,8 +70,8 @@ const mintNft = async (nftName: string, receiverAddress: string, userId: number)
 /**nft모듈: nft소각 */
 const burnNft = async (nftName: string, userId: number) => {
   try {
-    const nftInfo = await getNftInfo(nftName);
-    const ownedNftInfo = await getUserNftInfo(nftName, userId);
+    const nftInfo = await nftService.getNftInfo(nftName);
+    const ownedNftInfo = await nftService.getUserNftInfo(nftName, userId);
 
     const nftContract = new ethers.Contract(
       nftInfo.nftAddress as string,
@@ -90,7 +80,7 @@ const burnNft = async (nftName: string, userId: number) => {
     );
 
     const burnInfo = await burnNFT(nftContract, ownedNftInfo?.mint_id!);
-    await addBurnInfo(ownedNftInfo?.id!);
+    await nftService.addBurnInfo(ownedNftInfo?.id!);
     return burnInfo.transactionHash;
   } catch (error) {
     console.log(error);
