@@ -14,31 +14,25 @@ import { nftService } from "../service";
 
 /**nft모듈: nft발행 */
 const deployNFT = async (nftName: string) => {
-  try {
-    await nftService.checkDeployedState(nftName);
-    const nftInfo = await nftService.getNftInfo(nftName);
-    const metaUri = await uploadMetaIpfs(
-      nftInfo.name,
-      nftInfo.description!,
-      nftInfo.image!,
-      nftInfo.video!,
-    );
-    console.log("ipfs에 정보 업로드 완료", JSON.stringify(metaUri, null, 4));
+  /**web2상에 nft 정보 존재하는지 확인 */
+  const nftInfo = await nftService.getNftInfo(nftName);
+  /**Deploy상태인지 확인 */
+  await nftService.checkDeployedState(nftName);
+  const metaUri = await uploadMetaIpfs(
+    nftInfo.name,
+    nftInfo.description!,
+    nftInfo.image!,
+    nftInfo.video!,
+  );
+  console.log("ipfs에 정보 업로드 완료", JSON.stringify(metaUri, null, 4));
 
-    /**nft 발행 시작 */
-    await nftService.startDeploy(nftName);
-    const deployData = await deployMumbaiNFT(nftInfo.name, metaUri);
-    console.log("deploy NFT 완료");
-    await nftService.finishDeploy(nftName);
-    await nftService.saveNftAddress(nftName, deployData!.contractAddress);
-    console.log("nftAddress 저장 완료");
-  } catch (error) {
-    console.log(error);
-    throw errorGenerator({
-      msg: responseMessage.DEPLOY_NFT_FAIL_WEB2,
-      statusCode: statusCode.BAD_REQUEST,
-    });
-  }
+  /**nft 발행 시작 */
+  await nftService.startDeploy(nftName);
+  const deployData = await deployMumbaiNFT(nftInfo.name, metaUri);
+  console.log("deploy NFT 완료");
+  await nftService.finishDeploy(nftName);
+  await nftService.saveNftAddress(nftName, deployData!.contractAddress);
+  console.log("nftAddress 저장 완료");
 };
 
 /**nft모듈: nft민팅 */
