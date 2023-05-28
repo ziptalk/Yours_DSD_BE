@@ -44,7 +44,7 @@ const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
   } catch (error) {
     throw errorGenerator({
       msg: responseMessage.INSUFFICIENT_NFT,
-      statusCode: statusCode.BAD_REQUEST,
+      statusCode: statusCode.DB_ERROR,
     });
   }
 };
@@ -320,7 +320,7 @@ const checkDeployedState = async (nftName: string) => {
     if (data?.isLoading) {
       throw errorGenerator({
         msg: responseMessage.IS_LOADING_NFT,
-        statusCode: statusCode.BAD_REQUEST,
+        statusCode: statusCode.DB_ERROR,
       });
     }
   } catch (error) {
@@ -337,7 +337,7 @@ const checkLoadingState = async (id: number) => {
   if (data?.is_Loading) {
     throw errorGenerator({
       msg: responseMessage.IS_LOADING_NFT,
-      statusCode: statusCode.BAD_REQUEST,
+      statusCode: statusCode.DB_ERROR,
     });
   }
 };
