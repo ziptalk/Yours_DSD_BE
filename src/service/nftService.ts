@@ -91,25 +91,24 @@ const saveNftInfo = async (nftDto: nftDto) => {
 };
 /**nft이름 기반 nft 정보 조회 */
 const getNftInfo = async (nftName: string) => {
-  try {
-    const nftInfo = await prisma.nft.findFirst({ where: { name: nftName } });
-    const data: nftDto = {
-      name: nftInfo?.name!,
-      image: nftInfo?.image,
-      video: nftInfo?.video,
-      description: nftInfo?.description,
-      nftAddress: nftInfo?.nftAddress,
-    };
-    return data;
-  } catch (error) {
+  const nftInfo = await prisma.nft.findFirst({ where: { name: nftName } });
+  if (!nftInfo) {
     throw errorGenerator({
-      msg: responseMessage.GET_NFT_INFO_FAIL,
+      msg: responseMessage.INVALID_NFT,
       statusCode: statusCode.DB_ERROR,
     });
   }
+  const data: nftDto = {
+    name: nftInfo?.name!,
+    image: nftInfo?.image,
+    video: nftInfo?.video,
+    description: nftInfo?.description,
+    nftAddress: nftInfo?.nftAddress,
+  };
+  return data;
 };
 
-const startLoading = async (nftName: string) => {
+const startDeploy = async (nftName: string) => {
   try {
     await prisma.nft.update({
       where: {
@@ -127,7 +126,7 @@ const startLoading = async (nftName: string) => {
   }
 };
 
-const finishLoading = async (nftName: string) => {
+const finishDeploy = async (nftName: string) => {
   try {
     await prisma.nft.update({
       where: {
@@ -135,6 +134,48 @@ const finishLoading = async (nftName: string) => {
       },
       data: {
         isLoading: false,
+      },
+    });
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.FINISH_LOADING_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
+
+const startLoading = async (id: number) => {
+  try {
+    const nft = await prisma.user_has_nft.findFirst({
+      where: { id },
+    });
+    await prisma.user_has_nft.update({
+      where: {
+        id: nft?.id,
+      },
+      data: {
+        is_Loading: true,
+      },
+    });
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.START_LOADING_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
+
+const finishLoading = async (id: number) => {
+  try {
+    const nft = await prisma.user_has_nft.findFirst({
+      where: { id },
+    });
+    await prisma.user_has_nft.update({
+      where: {
+        id: nft?.id,
+      },
+      data: {
+        is_Loading: false,
       },
     });
   } catch (error) {
@@ -161,16 +202,10 @@ const saveNftAddress = async (nftName: string, nftAddress: string) => {
   }
 };
 
-const saveMintId = async (
-  nftName: string,
-  userId: number,
-  mintId: number,
-  txHash: string,
-  txDate: Date,
-) => {
+const saveMintId = async (id: number, mintId: number, txHash: string, txDate: Date) => {
   try {
-    await prisma.user_has_nft.updateMany({
-      where: { user_id: userId, name: nftName },
+    await prisma.user_has_nft.update({
+      where: { id },
       data: { mint_id: mintId, transaction_hash: txHash, transaction_date: txDate },
     });
   } catch (error) {
@@ -189,14 +224,42 @@ const getNftAddress = async (nftName: string) => {
   return result?.nftAddress;
 };
 
-/**nft이름, userId기반 nft정보 조회 */
-const getUserNftInfo = async (nftName: string, userId: number) => {
+/**nft이름, userId기반 민팅되지 않은 nft정보 조회 */
+const getUnmintedUserNftInfo = async (nftName: string, userId: number) => {
   try {
     const data = await prisma.user_has_nft.findFirst({
       where: {
         user_id: userId,
         name: nftName,
         deleted_at: null,
+        transaction_hash: null,
+      },
+      select: {
+        id: true,
+        user_id: true,
+        mint_id: true,
+        transaction_hash: true,
+        transaction_date: true,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.GET_NFT_INFO_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
+
+/**nft이름, userId기반 민팅된 nft정보 조회 */
+const getMintedUserNftInfo = async (nftName: string, userId: number) => {
+  try {
+    const data = await prisma.user_has_nft.findFirst({
+      where: {
+        user_id: userId,
+        name: nftName,
+        deleted_at: null,
+        transaction_hash: { not: null },
       },
       select: {
         id: true,
@@ -246,18 +309,55 @@ const modifyNftInfo = async (nftDto: nftDto) => {
     });
   }
 };
+
+const checkDeployedState = async (nftName: string) => {
+  try {
+    const data = await prisma.nft.findFirst({
+      where: {
+        name: nftName,
+      },
+    });
+    if (data?.isLoading) {
+      throw errorGenerator({
+        msg: responseMessage.IS_LOADING_NFT,
+        statusCode: statusCode.BAD_REQUEST,
+      });
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const checkLoadingState = async (id: number) => {
+  const data = await prisma.user_has_nft.findFirst({
+    where: {
+      id,
+    },
+  });
+  if (data?.is_Loading) {
+    throw errorGenerator({
+      msg: responseMessage.IS_LOADING_NFT,
+      statusCode: statusCode.BAD_REQUEST,
+    });
+  }
+};
 export {
   saveMintInfo,
   deleteManyMintInfo,
   getAllUserNftByUserId,
   saveNftInfo,
   getNftInfo,
-  startLoading,
-  finishLoading,
+  startDeploy,
+  finishDeploy,
   saveNftAddress,
   saveMintId,
   getNftAddress,
-  getUserNftInfo,
+  getUnmintedUserNftInfo,
+  getMintedUserNftInfo,
   addBurnInfo,
   modifyNftInfo,
+  checkDeployedState,
+  checkLoadingState,
+  startLoading,
+  finishLoading,
 };
