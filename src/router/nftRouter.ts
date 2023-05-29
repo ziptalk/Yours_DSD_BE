@@ -76,4 +76,9 @@ router.put(
   errorValidator,
   nftController.modifyDeployedNftData,
 );
+
+/**WEB2 nft 정보 조회 */
+router.get("/:nftName", nftController.getNftInfoByName);
+
+/**WEB2 nft 정보 삭제 */
 export default router;
