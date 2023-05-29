@@ -108,6 +108,19 @@ const getNftInfo = async (nftName: string) => {
   return data;
 };
 
+/**nft이름기반 nft데이터 삭제 */
+const deleteNftInfo = async (nftName: string) => {
+  try {
+    const data = await prisma.nft.delete({ where: { name: nftName } });
+    return data;
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.INVALID_NFT,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
+
 const startDeploy = async (nftName: string) => {
   try {
     await prisma.nft.update({
@@ -341,6 +354,7 @@ const checkLoadingState = async (id: number) => {
     });
   }
 };
+
 export {
   saveMintInfo,
   deleteManyMintInfo,
@@ -360,4 +374,5 @@ export {
   checkLoadingState,
   startLoading,
   finishLoading,
+  deleteNftInfo,
 };
