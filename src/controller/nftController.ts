@@ -151,6 +151,27 @@ const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunc
   }
 };
 
+const getNftInfoByName = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { nftName } = req.params;
+    const data = await nftService.getNftInfo(nftName);
+    return success(res, statusCode.OK, responseMessage.SUCCESS, data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteNftInfoByName = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { nftName } = req.params;
+    const data = await nftService.deleteNftInfo(nftName);
+
+    return success(res, statusCode.OK, responseMessage.SUCCESS, data);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   web2Mint,
   integrateNft,
@@ -161,4 +182,6 @@ export {
   deployAndBurnNft,
   modifyNft,
   modifyDeployedNftData,
+  getNftInfoByName,
+  deleteNftInfoByName,
 };

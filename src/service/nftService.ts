@@ -44,7 +44,7 @@ const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
   } catch (error) {
     throw errorGenerator({
       msg: responseMessage.INSUFFICIENT_NFT,
-      statusCode: statusCode.BAD_REQUEST,
+      statusCode: statusCode.DB_ERROR,
     });
   }
 };
@@ -95,7 +95,7 @@ const getNftInfo = async (nftName: string) => {
   if (!nftInfo) {
     throw errorGenerator({
       msg: responseMessage.INVALID_NFT,
-      statusCode: statusCode.DB_ERROR,
+      statusCode: statusCode.NOT_FOUND,
     });
   }
   const data: nftDto = {
@@ -106,6 +106,19 @@ const getNftInfo = async (nftName: string) => {
     nftAddress: nftInfo?.nftAddress,
   };
   return data;
+};
+
+/**nft이름기반 nft데이터 삭제 */
+const deleteNftInfo = async (nftName: string) => {
+  try {
+    const data = await prisma.nft.delete({ where: { name: nftName } });
+    return data;
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.INVALID_NFT,
+      statusCode: statusCode.NOT_FOUND,
+    });
+  }
 };
 
 const startDeploy = async (nftName: string) => {
@@ -305,7 +318,7 @@ const modifyNftInfo = async (nftDto: nftDto) => {
     console.log(error);
     throw errorGenerator({
       msg: responseMessage.INVALID_NFT,
-      statusCode: statusCode.NOT_FOUND,
+      statusCode: statusCode.DB_ERROR,
     });
   }
 };
@@ -320,7 +333,7 @@ const checkDeployedState = async (nftName: string) => {
     if (data?.isLoading) {
       throw errorGenerator({
         msg: responseMessage.IS_LOADING_NFT,
-        statusCode: statusCode.BAD_REQUEST,
+        statusCode: statusCode.DB_ERROR,
       });
     }
   } catch (error) {
@@ -337,10 +350,11 @@ const checkLoadingState = async (id: number) => {
   if (data?.is_Loading) {
     throw errorGenerator({
       msg: responseMessage.IS_LOADING_NFT,
-      statusCode: statusCode.BAD_REQUEST,
+      statusCode: statusCode.DB_ERROR,
     });
   }
 };
+
 export {
   saveMintInfo,
   deleteManyMintInfo,
@@ -360,4 +374,5 @@ export {
   checkLoadingState,
   startLoading,
   finishLoading,
+  deleteNftInfo,
 };
