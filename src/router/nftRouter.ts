@@ -81,4 +81,5 @@ router.put(
 router.get("/:nftName", nftController.getNftInfoByName);
 
 /**WEB2 nft 정보 삭제 */
+router.delete("/:nftName", nftController.deleteNftInfoByName);
 export default router;
