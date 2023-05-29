@@ -161,6 +161,17 @@ const getNftInfoByName = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
+const deleteNftInfoByName = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { nftName } = req.params;
+    const data = await nftService.deleteNftInfo(nftName);
+
+    return success(res, statusCode.OK, responseMessage.SUCCESS, data);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   web2Mint,
   integrateNft,
@@ -172,4 +183,5 @@ export {
   modifyNft,
   modifyDeployedNftData,
   getNftInfoByName,
+  deleteNftInfoByName,
 };
