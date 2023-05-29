@@ -116,7 +116,7 @@ const deleteNftInfo = async (nftName: string) => {
   } catch (error) {
     throw errorGenerator({
       msg: responseMessage.INVALID_NFT,
-      statusCode: statusCode.DB_ERROR,
+      statusCode: statusCode.NOT_FOUND,
     });
   }
 };
