@@ -7,6 +7,7 @@ import { nftDto } from "../interface/nftDto";
 import { burnNft, deployNFT, mintNft } from "../module/nft";
 import { uploadMetaIpfs } from "../contract/commonContract";
 import { setUri } from "../contract/mumbaiContract";
+import { logger } from "../module/winston";
 const web2Mint = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, nftName } = req.body;
@@ -32,6 +33,7 @@ const getAllUserNftInfo = async (req: Request, res: Response, next: NextFunction
   try {
     const { userId } = req.params;
     const data = await nftService.getAllUserNftByUserId(+userId);
+    logger.info("nft소유정보를 조회합니다.");
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
