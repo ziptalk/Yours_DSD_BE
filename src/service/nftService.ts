@@ -95,7 +95,7 @@ const getNftInfo = async (nftName: string) => {
   if (!nftInfo) {
     throw errorGenerator({
       msg: responseMessage.INVALID_NFT,
-      statusCode: statusCode.DB_ERROR,
+      statusCode: statusCode.NOT_FOUND,
     });
   }
   const data: nftDto = {
