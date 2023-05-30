@@ -315,7 +315,6 @@ const modifyNftInfo = async (nftDto: nftDto) => {
     });
     return modifiedNft;
   } catch (error) {
-    console.log(error);
     throw errorGenerator({
       msg: responseMessage.INVALID_NFT,
       statusCode: statusCode.DB_ERROR,
