@@ -25,7 +25,7 @@ router.get(
   nftController.getAllUserNftInfo,
 );
 
-router.delete(
+router.put(
   "/own/:userId",
   [param("userId").isInt(), body("nfts").notEmpty()],
   errorValidator,
