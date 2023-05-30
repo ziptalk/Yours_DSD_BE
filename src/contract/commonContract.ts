@@ -2,6 +2,7 @@ import { create } from "ipfs-http-client";
 import { ethers } from "ethers";
 import { responseMessage } from "../module";
 import config from "../config";
+import { logger } from "../module/winston";
 
 const ipfsId = config.ipfsId;
 const ipfsSecret = config.ipfsSecret;
@@ -35,8 +36,8 @@ const uploadMetaIpfs = async (
     resultPath = `https://ipfs.infura.io/ipfs/${result.path}`;
     return resultPath;
   } catch (error) {
-    console.log("error on uploadMetaIpfs");
-    console.log(error);
+    logger.error("uploadMetaIpfs에서 에러 발생");
+    logger.error(error);
     return responseMessage.META_ERROR;
   }
 };
@@ -58,8 +59,8 @@ const getDeployedAddress = async (transaction: ethers.Contract) => {
 
     return data;
   } catch (error) {
-    console.log("error on getDeployedAddress");
-    console.log(error);
+    logger.error("getDeployedAddress에서 에러 발생");
+    logger.error(error);
   }
 };
 
@@ -71,11 +72,11 @@ const getMethods = (data: any) => {
         methodData += "(" + value1.type + " " + value1.name + ")";
       });
       methodData += ");";
-      console.log(methodData);
+      logger.error(methodData);
     });
   } catch (error) {
-    console.log("error on getMethods");
-    console.log(error);
+    logger.error("getMethods에러 에러 발생");
+    logger.error(error);
   }
 };
 
