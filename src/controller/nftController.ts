@@ -21,8 +21,7 @@ const web2Mint = async (req: Request, res: Response, next: NextFunction) => {
 const integrateNft = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, oldNfts, newNft } = req.body;
-    await nftService.deleteManyMintInfo(userId, oldNfts);
-    const data = await nftService.saveMintInfo(userId, newNft);
+    const data = await nftService.integrateNft(userId, oldNfts, newNft);
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
