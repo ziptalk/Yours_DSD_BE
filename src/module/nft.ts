@@ -11,6 +11,7 @@ import responseMessage from "./constants/responseMessage";
 import statusCode from "./constants/statusCode";
 import errorGenerator from "./error/errorGenerator";
 import { nftService } from "../service";
+import { logger } from "./winston";
 
 /**nft모듈: nft발행 */
 const deployNFT = async (nftName: string) => {
@@ -24,15 +25,15 @@ const deployNFT = async (nftName: string) => {
     nftInfo.image!,
     nftInfo.video!,
   );
-  console.log("ipfs에 정보 업로드 완료", JSON.stringify(metaUri, null, 4));
+  logger.info("ipfs에 정보 업로드 완료", JSON.stringify(metaUri, null, 4));
 
   /**nft 발행 시작 */
   await nftService.startDeploy(nftName);
   const deployData = await deployMumbaiNFT(nftInfo.name, metaUri);
-  console.log("deploy NFT 완료");
+  logger.info("deploy NFT 완료");
   await nftService.finishDeploy(nftName);
   await nftService.saveNftAddress(nftName, deployData!.contractAddress);
-  console.log("nftAddress 저장 완료");
+  logger.info("nftAddress 저장 완료");
 };
 
 /**nft모듈: nft민팅 */
@@ -56,7 +57,7 @@ const mintNft = async (nftName: string, receiverAddress: string, userId: number)
     polygonProvider,
   );
   const mintData = await mintMumbaiNFT(nftContract, receiverAddress);
-  console.log(mintData);
+  logger.info(mintData);
   await nftService.saveMintId(
     userNft.id,
     mintData.mintId,
