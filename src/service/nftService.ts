@@ -237,7 +237,7 @@ const getNftAddress = async (nftName: string) => {
   return result?.nftAddress;
 };
 
-/**nft이름, userId기반 민팅되지 않은 nft정보 조회 */
+/**nft이름, userId기반 민팅되지 않은 nft정보 조회 + isLoading=false */
 const getUnmintedUserNftInfo = async (nftName: string, userId: number) => {
   try {
     const data = await prisma.user_has_nft.findFirst({
@@ -246,6 +246,7 @@ const getUnmintedUserNftInfo = async (nftName: string, userId: number) => {
         name: nftName,
         deleted_at: null,
         transaction_hash: null,
+        is_Loading: false,
       },
       select: {
         id: true,
