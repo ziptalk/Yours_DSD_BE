@@ -75,8 +75,6 @@ const burnNft = async (nftName: string, userId: number) => {
       statusCode: statusCode.BAD_REQUEST,
     });
   }
-  /**로딩여부 체크 */
-  await nftService.checkLoadingState(userNft.id);
   const nftContract = new ethers.Contract(
     nftInfo.nftAddress as string,
     dsdBenefitData.abi,
