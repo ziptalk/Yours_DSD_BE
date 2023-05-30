@@ -274,6 +274,7 @@ const getMintedUserNftInfo = async (nftName: string, userId: number) => {
         name: nftName,
         deleted_at: null,
         transaction_hash: { not: null },
+        is_Loading: false,
       },
       select: {
         id: true,
