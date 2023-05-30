@@ -74,15 +74,15 @@ const deployAndTransferNft = async (req: Request, res: Response, next: NextFunct
     /**발행 여부 확인 */
     const nftAddress = await nftService.getNftAddress(nftName);
     if (!nftAddress) {
-      console.log(`${nftName}의 발행이 시작되었습니다.`);
+      logger.info(`${nftName}의 발행이 시작되었습니다.`);
       await deployNFT(nftName);
-      console.log(`${nftName}의 발행이 완료되었습니다.`);
+      logger.info(`${nftName}의 발행이 완료되었습니다.`);
     }
 
     /**nft 민팅 */
-    console.log(`${nftName}의 민팅이 시작되었습니다.`);
+    logger.info(`${nftName}의 민팅이 시작되었습니다.`);
     await mintNft(nftName, receiverAddress, userId);
-    console.log(`${nftName}의 민팅이 완료되었습니다.`);
+    logger.info(`${nftName}의 민팅이 완료되었습니다.`);
     return success(res, statusCode.OK, responseMessage.SUCCESS);
   } catch (error) {
     next(error);
@@ -96,15 +96,15 @@ const deployAndBurnNft = async (req: Request, res: Response, next: NextFunction)
     /**발행 여부 확인 */
     const nftAddress = await nftService.getNftAddress(nftName);
     if (!nftAddress) {
-      console.log(`${nftName}의 발행이 시작되었습니다.`);
+      logger.info(`${nftName}의 발행이 시작되었습니다.`);
       await deployNFT(nftName);
-      console.log(`${nftName}의 발행이 완료되었습니다.`);
+      logger.info(`${nftName}의 발행이 완료되었습니다.`);
     }
 
     /**nft 소각 */
-    console.log(`${nftName}의 소각이 시작되었습니다.`);
+    logger.info(`${nftName}의 소각이 시작되었습니다.`);
     const transactionHash = await burnNft(nftName, userId);
-    console.log(`${nftName}의 소각이 완료되었습니다.`);
+    logger.info(`${nftName}의 소각이 완료되었습니다.`);
     return success(res, statusCode.OK, responseMessage.SUCCESS, {
       transactionHash: transactionHash,
     });
