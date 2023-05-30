@@ -5,6 +5,7 @@ import deployed from "./deployed-address.json";
 import factoryData from "./DSDFactory.json";
 import benefitData from "./DSDBenefitNFT.json";
 import { ethers } from "ethers";
+import { logger } from "../module/winston";
 
 const factoryAddress = deployed.DSDFactory;
 const polygonProvider = new ethers.providers.JsonRpcProvider(config.mumbaiRPC);
@@ -23,7 +24,8 @@ const deployMumbaiNFT = async (name: string | null, uri: string | null) => {
     const addr = await getDeployedAddress(rc);
     return addr;
   } catch (error) {
-    console.log(error);
+    logger.error("deployMumbaiNFT에서 에러 발생");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.DEPLOY_NFT_FAIL_WEB3,
       statusCode: statusCode.WEB3_ERROR,
@@ -49,7 +51,8 @@ const mintMumbaiNFT = async (nft: any, address: string) => {
 
     return data;
   } catch (error) {
-    console.log(error);
+    logger.error("mintMumbaiNFT에서 에러 발생");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.MINT_NFT_FAIL_WEB3,
       statusCode: statusCode.WEB3_ERROR,
@@ -79,7 +82,8 @@ const burnNFT = async (nft: any, mintId: number) => {
     const rc = await tx.wait();
     return rc;
   } catch (error) {
-    console.log(error);
+    logger.error("burnNFT에서 에러 발생");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.BURN_NFT_FAIL_WEB3,
       statusCode: statusCode.WEB3_ERROR,
@@ -101,7 +105,8 @@ const setUri = async (uri: string, nftAddress: string) => {
     };
     return data;
   } catch (error) {
-    console.log(error);
+    logger.error("setUri에서 에러 발생");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.SET_NFT_URI_FAIL_WEB3,
       statusCode: statusCode.WEB3_ERROR,
