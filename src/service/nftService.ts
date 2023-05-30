@@ -26,6 +26,7 @@ const saveMintInfo = async (userId: number, nftName: string) => {
   }
 };
 
+/**유저 소유 nft 여러개 삭제 */
 const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
   try {
     await prisma.$transaction(async (tx) => {
@@ -48,7 +49,41 @@ const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
     });
   }
 };
+/**통합 nft 생성 */
+const integrateNft = async (userId: number, nfts: Array<string>, nftName: string) => {
+  try {
+    await prisma.$transaction(async (tx) => {
+      for (let i = 0; i < nfts.length; i++) {
+        const nftName = nfts[i];
+        const nft = await tx.user_has_nft.findFirst({
+          where: { user_id: userId, name: nftName },
+        });
+        await tx.user_has_nft.delete({
+          where: {
+            id: nft?.id,
+          },
+        });
+      }
 
+      const userNft = await tx.user_has_nft.create({
+        data: {
+          user_id: userId,
+          name: nftName,
+        },
+      });
+      const data = {
+        userId: userNft.user_id,
+        name: userNft.name,
+      };
+      return data;
+    });
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.INSUFFICIENT_NFT,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
 /**userId기반 모든 유저 소유 nft정보 조회 */
 const getAllUserNftByUserId = async (userId: number) => {
   try {
@@ -237,7 +272,7 @@ const getNftAddress = async (nftName: string) => {
   return result?.nftAddress;
 };
 
-/**nft이름, userId기반 민팅되지 않은 nft정보 조회 */
+/**nft이름, userId기반 민팅되지 않은 nft정보 조회 + isLoading=false */
 const getUnmintedUserNftInfo = async (nftName: string, userId: number) => {
   try {
     const data = await prisma.user_has_nft.findFirst({
@@ -246,6 +281,7 @@ const getUnmintedUserNftInfo = async (nftName: string, userId: number) => {
         name: nftName,
         deleted_at: null,
         transaction_hash: null,
+        is_Loading: false,
       },
       select: {
         id: true,
@@ -273,6 +309,7 @@ const getMintedUserNftInfo = async (nftName: string, userId: number) => {
         name: nftName,
         deleted_at: null,
         transaction_hash: { not: null },
+        is_Loading: false,
       },
       select: {
         id: true,
@@ -375,4 +412,5 @@ export {
   startLoading,
   finishLoading,
   deleteNftInfo,
+  integrateNft,
 };

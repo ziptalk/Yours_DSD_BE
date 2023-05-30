@@ -37,16 +37,14 @@ const deployNFT = async (nftName: string) => {
 
 /**nft모듈: nft민팅 */
 const mintNft = async (nftName: string, receiverAddress: string, userId: number) => {
-  /**web2상에서 가지고있는지 체크하고 가지고있으면 민팅 시작.*/
+  /**web2상에서 가지고있는지, isLoading이 false인지 체크하고 가지고있으면 민팅 시작.*/
   const userNft = await nftService.getUnmintedUserNftInfo(nftName, userId);
   if (!userNft) {
     throw errorGenerator({
-      msg: responseMessage.INSUFFICIENT_NFT,
+      msg: responseMessage.INVALID_NFT,
       statusCode: statusCode.BAD_REQUEST,
     });
   }
-  /**로딩여부 체크 */
-  await nftService.checkLoadingState(userNft.id);
 
   await nftService.startLoading(userNft.id);
   const nftInfo = await nftService.getNftInfo(nftName);
@@ -77,8 +75,6 @@ const burnNft = async (nftName: string, userId: number) => {
       statusCode: statusCode.BAD_REQUEST,
     });
   }
-  /**로딩여부 체크 */
-  await nftService.checkLoadingState(userNft.id);
   const nftContract = new ethers.Contract(
     nftInfo.nftAddress as string,
     dsdBenefitData.abi,
