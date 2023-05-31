@@ -3,6 +3,7 @@ import statusCode from "../module/constants/statusCode";
 import errorGenerator from "../module/error/errorGenerator";
 import { responseMessage } from "../module";
 import { nftDto } from "../interface/nftDto";
+import { logger } from "../module/winston";
 const prisma = new PrismaClient();
 
 const saveMintInfo = async (userId: number, nftName: string) => {
@@ -19,6 +20,8 @@ const saveMintInfo = async (userId: number, nftName: string) => {
     };
     return data;
   } catch (error) {
+    logger.error("[nftService]saveNftInfo ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.SAVE_USER_NFT_FAIL,
       statusCode: statusCode.DB_ERROR,
@@ -43,6 +46,8 @@ const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
       }
     });
   } catch (error) {
+    logger.error("[nftService]deleteManyMintInfo ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.INSUFFICIENT_NFT,
       statusCode: statusCode.DB_ERROR,
@@ -99,6 +104,8 @@ const getAllUserNftByUserId = async (userId: number) => {
     });
     return data;
   } catch (error) {
+    logger.error("[nftService]getAllUserNftByUserId ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.GET_USER_NFT_INFO_FAIL,
       statusCode: statusCode.DB_ERROR,
@@ -118,6 +125,8 @@ const saveNftInfo = async (nftDto: nftDto) => {
     });
     return createdNft;
   } catch (error) {
+    logger.error("[nftService]saveNftInfo ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.CREATE_NFT_INFO_FAIL,
       statusCode: statusCode.DB_ERROR,
@@ -149,6 +158,8 @@ const deleteNftInfo = async (nftName: string) => {
     const data = await prisma.nft.delete({ where: { name: nftName } });
     return data;
   } catch (error) {
+    logger.error("[nftService]deleteNftInfo ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.INVALID_NFT,
       statusCode: statusCode.NOT_FOUND,
@@ -167,6 +178,8 @@ const startDeploy = async (nftName: string) => {
       },
     });
   } catch (error) {
+    logger.error("[nftService]startDeploy ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.START_LOADING_FAIL,
       statusCode: statusCode.DB_ERROR,
@@ -185,6 +198,8 @@ const finishDeploy = async (nftName: string) => {
       },
     });
   } catch (error) {
+    logger.error("[nftService]finishDeploy ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.FINISH_LOADING_FAIL,
       statusCode: statusCode.DB_ERROR,
@@ -206,6 +221,8 @@ const startLoading = async (id: number) => {
       },
     });
   } catch (error) {
+    logger.error("[nftService]startLoading ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.START_LOADING_FAIL,
       statusCode: statusCode.DB_ERROR,
@@ -227,6 +244,8 @@ const finishLoading = async (id: number) => {
       },
     });
   } catch (error) {
+    logger.error("[nftService]finishLoading ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.FINISH_LOADING_FAIL,
       statusCode: statusCode.DB_ERROR,
@@ -243,6 +262,8 @@ const saveNftAddress = async (nftName: string, nftAddress: string) => {
       },
     });
   } catch (error) {
+    logger.error("[nftService]saveNftAddress ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.SAVE_NFT_ADDR_FAIL,
       statusCode: statusCode.DB_ERROR,
@@ -257,6 +278,8 @@ const saveMintId = async (id: number, mintId: number, txHash: string, txDate: Da
       data: { mint_id: mintId, transaction_hash: txHash, transaction_date: txDate },
     });
   } catch (error) {
+    logger.error("[nftService]saveMintId ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.SAVE_MINT_ID_FAIL,
       statusCode: statusCode.DB_ERROR,
@@ -293,6 +316,8 @@ const getUnmintedUserNftInfo = async (nftName: string, userId: number) => {
     });
     return data;
   } catch (error) {
+    logger.error("[nftService]getUnmintedUserNftInfo ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.GET_NFT_INFO_FAIL,
       statusCode: statusCode.DB_ERROR,
@@ -321,6 +346,8 @@ const getMintedUserNftInfo = async (nftName: string, userId: number) => {
     });
     return data;
   } catch (error) {
+    logger.error("[nftService]getMintedUserNftInfo ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.GET_NFT_INFO_FAIL,
       statusCode: statusCode.DB_ERROR,
@@ -352,7 +379,8 @@ const modifyNftInfo = async (nftDto: nftDto) => {
     });
     return modifiedNft;
   } catch (error) {
-    console.log(error);
+    logger.error("[nftService]modifyNftInfo ERROR");
+    logger.error(error);
     throw errorGenerator({
       msg: responseMessage.INVALID_NFT,
       statusCode: statusCode.DB_ERROR,
@@ -374,6 +402,8 @@ const checkDeployedState = async (nftName: string) => {
       });
     }
   } catch (error) {
+    logger.error("[nftService]checkDeployedState ERROR");
+    logger.error(error);
     throw error;
   }
 };
