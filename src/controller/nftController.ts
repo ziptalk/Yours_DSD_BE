@@ -114,6 +114,7 @@ const deployAndBurnNft = async (req: Request, res: Response, next: NextFunction)
 
 const modifyNft = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { nftName } = req.params;
     const { name, image, video, description } = req.body;
     const nftDto: nftDto = {
       name,
@@ -121,7 +122,7 @@ const modifyNft = async (req: Request, res: Response, next: NextFunction) => {
       video,
       description,
     };
-    const data = await nftService.modifyNftInfo(nftDto);
+    const data = await nftService.modifyNftInfo(nftName, nftDto);
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
@@ -130,6 +131,7 @@ const modifyNft = async (req: Request, res: Response, next: NextFunction) => {
 
 const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { nftName } = req.params;
     const { name, image, video, description } = req.body;
     const nftDto: nftDto = {
       name,
@@ -137,9 +139,9 @@ const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunc
       video,
       description,
     };
-    await nftService.startDeploy(name);
-    await nftService.modifyNftInfo(nftDto);
-    const nftAddress = await nftService.getNftAddress(name);
+    await nftService.startDeploy(nftName);
+    await nftService.modifyNftInfo(nftName, nftDto);
+    const nftAddress = await nftService.getNftAddress(nftName);
     if (!nftAddress) {
       return fail(res, statusCode.NOT_FOUND, responseMessage.UNPUBLISHED_NFT);
     }
