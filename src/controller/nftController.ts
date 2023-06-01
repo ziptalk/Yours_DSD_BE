@@ -144,12 +144,16 @@ const modifyNft = async (req: Request, res: Response, next: NextFunction) => {
       video,
       description,
     };
+    /**바꾸려는 nft 이름이 이미 존재하는지 확인 */
     const isNftNameExist = await nftService.isNftNameExist(name);
     if (isNftNameExist)
       throw errorGenerator({
         msg: responseMessage.NFT_ALREADY_EXIST,
         statusCode: statusCode.BAD_REQUEST,
       });
+    /**nft 존재 여부 확인 */
+    const nftInfo = await nftService.getNftInfo(nftName);
+    logger.info(`nft 존재 여부 확인 결과 nftInfo ${JSON.stringify(nftInfo, null, 4)}`);
     const data = await nftService.modifyNftInfo(nftName, nftDto);
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
@@ -198,7 +202,8 @@ const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunc
     await nftService.finishDeploy(name);
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
-    await nftService.finishDeploy(globalName);
+    logger.error("[nftService]modifyDeployedNftData ERROR");
+    logger.error(error);
     next(error);
   }
 };
