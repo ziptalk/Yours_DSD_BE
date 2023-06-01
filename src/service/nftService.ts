@@ -147,6 +147,12 @@ const getNftInfo = async (nftName: string) => {
   return data;
 };
 
+/**nft 이름 존재여부 조회 */
+const isNftNameExist = async (nftName: string) => {
+  const nft = await prisma.nft.findFirst({ where: { name: nftName } });
+  return !!nft;
+};
+
 /**nft이름기반 nft데이터 삭제 */
 const deleteNftInfo = async (nftName: string) => {
   try {
@@ -467,4 +473,5 @@ export {
   deleteNftInfo,
   integrateNft,
   getLoadingUserNftInfo,
+  isNftNameExist,
 };
