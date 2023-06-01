@@ -46,6 +46,7 @@ const mintNft = async (nftName: string, receiverAddress: string, userId: number)
       statusCode: statusCode.BAD_REQUEST,
     });
   }
+  logger.info(`${JSON.stringify(userNft, null, 4)}를 민팅합니다.`);
 
   await nftService.startLoading(userNft.id);
   const nftInfo = await nftService.getNftInfo(nftName);
@@ -54,8 +55,9 @@ const mintNft = async (nftName: string, receiverAddress: string, userId: number)
     dsdBenefitData.abi,
     polygonProvider,
   );
+  logger.info(`nftContract 구성 완료`);
   const mintData = await mintMumbaiNFT(nftContract, receiverAddress);
-  logger.info(mintData);
+  logger.info(`mintData는 ${JSON.stringify(mintData, null, 4)}`);
   await nftService.saveMintId(
     userNft.id,
     mintData.mintId,
