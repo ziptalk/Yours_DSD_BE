@@ -49,7 +49,7 @@ router.post("/", [body("name").notEmpty()], errorValidator, nftController.create
 
 /**WEB2 nft정보 수정 */
 router.put(
-  "/",
+  "/:nftName",
   [
     body("name").notEmpty(),
     body("image").notEmpty(),
@@ -61,7 +61,7 @@ router.put(
 );
 /**WEB3 nft 정보 수정 */
 router.put(
-  "/publish",
+  "/publish/:nftName",
   [
     body("name").notEmpty(),
     body("image").notEmpty(),
