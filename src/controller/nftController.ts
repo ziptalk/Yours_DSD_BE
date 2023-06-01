@@ -82,9 +82,9 @@ const deployAndTransferNft = async (req: Request, res: Response, next: NextFunct
 
     /**nft 민팅 */
     logger.info(`${nftName}의 민팅이 시작되었습니다.`);
-    await mintNft(nftName, receiverAddress, userId);
+    const mintData = await mintNft(nftName, receiverAddress, userId);
     logger.info(`${nftName}의 민팅이 완료되었습니다.`);
-    return success(res, statusCode.OK, responseMessage.SUCCESS);
+    return success(res, statusCode.OK, responseMessage.SUCCESS, mintData);
   } catch (error) {
     logger.info(error);
     const userNft = await nftService.getLoadingUserNftInfo(name, +id);
@@ -149,7 +149,7 @@ const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunc
     };
     await nftService.startDeploy(nftName);
     await nftService.modifyNftInfo(nftName, nftDto);
-    const nftAddress = await nftService.getNftAddress(nftName);
+    const nftAddress = await nftService.getNftAddress(name);
     if (!nftAddress) {
       return fail(res, statusCode.NOT_FOUND, responseMessage.UNPUBLISHED_NFT);
     }

@@ -65,6 +65,7 @@ const mintNft = async (nftName: string, receiverAddress: string, userId: number)
     mintData.date,
   );
   await nftService.finishLoading(userNft.id);
+  return mintData;
 };
 
 /**nft모듈: nft소각 */
