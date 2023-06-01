@@ -67,9 +67,11 @@ const createNft = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const deployAndTransferNft = async (req: Request, res: Response, next: NextFunction) => {
+  let id, name;
   try {
     const { userId, nftName, receiverAddress } = req.body;
-
+    id = userId;
+    name = nftName;
     /**발행 여부 확인 */
     const nftAddress = await nftService.getNftAddress(nftName);
     if (!nftAddress) {
@@ -84,6 +86,12 @@ const deployAndTransferNft = async (req: Request, res: Response, next: NextFunct
     logger.info(`${nftName}의 민팅이 완료되었습니다.`);
     return success(res, statusCode.OK, responseMessage.SUCCESS);
   } catch (error) {
+    logger.info(error);
+    const userNft = await nftService.getLoadingUserNftInfo(name, +id);
+    logger.info(
+      `다음 nft의 is_Loading을 false로 되돌립니다.${JSON.stringify(userNft, null, 4)}`,
+    );
+    nftService.finishLoading(userNft?.id!);
     next(error);
   }
 };
