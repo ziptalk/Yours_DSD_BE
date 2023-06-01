@@ -137,12 +137,13 @@ const getNftInfo = async (nftName: string) => {
       statusCode: statusCode.NOT_FOUND,
     });
   }
-  const data: nftDto = {
+  const data = {
     name: nftInfo?.name!,
     image: nftInfo?.image,
     video: nftInfo?.video,
     description: nftInfo?.description,
     nftAddress: nftInfo?.nftAddress,
+    is_loading: nftInfo.isLoading,
   };
   return data;
 };
