@@ -12,6 +12,12 @@ import { errorGenerator } from "../module";
 const web2Mint = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, nftName } = req.body;
+    const nft = await nftService.getNftInfo(nftName);
+    if (!nft)
+      throw errorGenerator({
+        msg: responseMessage.INVALID_NFT,
+        statusCode: statusCode.NOT_FOUND,
+      });
     const data = await nftService.saveMintInfo(+userId, nftName);
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
@@ -54,7 +60,7 @@ const deleteUserNftInfo = async (req: Request, res: Response, next: NextFunction
 const createNft = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, image, video, description } = req.body;
-    const nft = nftService.getNftInfo(name);
+    const nft = await nftService.getNftInfo(name);
     if (!!nft)
       throw errorGenerator({
         msg: responseMessage.NFT_ALREADY_EXIST,
