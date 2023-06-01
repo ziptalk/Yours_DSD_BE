@@ -60,8 +60,8 @@ const deleteUserNftInfo = async (req: Request, res: Response, next: NextFunction
 const createNft = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, image, video, description } = req.body;
-    const nft = await nftService.getNftInfo(name);
-    if (!!nft)
+    const isNftNameExist = await nftService.isNftNameExist(name);
+    if (isNftNameExist)
       throw errorGenerator({
         msg: responseMessage.NFT_ALREADY_EXIST,
         statusCode: statusCode.BAD_REQUEST,
@@ -75,6 +75,7 @@ const createNft = async (req: Request, res: Response, next: NextFunction) => {
     const data = await nftService.saveNftInfo(nftDto);
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
+    logger.error(error);
     next(error);
   }
 };
