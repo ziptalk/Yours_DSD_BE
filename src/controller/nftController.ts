@@ -8,6 +8,7 @@ import { burnNft, deployNFT, mintNft } from "../module/nft";
 import { uploadMetaIpfs } from "../contract/commonContract";
 import { setUri } from "../contract/mumbaiContract";
 import { logger } from "../module/winston";
+import { errorGenerator } from "../module";
 const web2Mint = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, nftName } = req.body;
@@ -53,6 +54,12 @@ const deleteUserNftInfo = async (req: Request, res: Response, next: NextFunction
 const createNft = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, image, video, description } = req.body;
+    const nft = nftService.getNftInfo(name);
+    if (!!nft)
+      throw errorGenerator({
+        msg: responseMessage.NFT_ALREADY_EXIST,
+        statusCode: statusCode.BAD_REQUEST,
+      });
     const nftDto: nftDto = {
       name,
       image,
