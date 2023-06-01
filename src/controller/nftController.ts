@@ -152,6 +152,7 @@ const modifyNft = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunction) => {
+  let globalName;
   try {
     const { nftName } = req.params;
     const { name, image, video, description } = req.body;
@@ -161,17 +162,29 @@ const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunc
       video,
       description,
     };
+    globalName = name;
+    /**nft 존재 여부 확인 */
+    const nftInfo = await nftService.getNftInfo(nftName);
+    /**발행 여부 확인 */
+    if (!nftInfo.nftAddress)
+      throw errorGenerator({
+        msg: responseMessage.UNPUBLISHED_NFT,
+        statusCode: statusCode.BAD_REQUEST,
+      });
+    /**로딩 여부 확인 */
+    if (nftInfo.is_loading)
+      throw errorGenerator({
+        msg: responseMessage.IS_LOADING_NFT,
+        statusCode: statusCode.BAD_REQUEST,
+      });
     await nftService.startDeploy(nftName);
     await nftService.modifyNftInfo(nftName, nftDto);
-    const nftAddress = await nftService.getNftAddress(name);
-    if (!nftAddress) {
-      return fail(res, statusCode.NOT_FOUND, responseMessage.UNPUBLISHED_NFT);
-    }
     const newUri = await uploadMetaIpfs(name, description, image, video);
-    const data = await setUri(newUri, nftAddress);
+    const data = await setUri(newUri, nftInfo.nftAddress);
     await nftService.finishDeploy(name);
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
+    await nftService.finishDeploy(globalName);
     next(error);
   }
 };
