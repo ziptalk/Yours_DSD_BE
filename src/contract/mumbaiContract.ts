@@ -77,7 +77,7 @@ const transferMumbaiNFT = async (
 const burnNFT = async (nft: any, mintId: number) => {
   try {
     const exGas = await nft.connect(wallet).estimateGas.burn(mintId);
-    console.log("expected gas:", exGas.toString(10));
+    logger.info("expected gas:", exGas.toString(10));
     const tx = await nft.connect(wallet).burn(mintId);
     const rc = await tx.wait();
     return rc;
