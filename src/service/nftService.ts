@@ -116,12 +116,7 @@ const getAllUserNftByUserId = async (userId: number) => {
 const saveNftInfo = async (nftDto: nftDto) => {
   try {
     const createdNft = await prisma.nft.create({
-      data: {
-        name: nftDto.name,
-        image: nftDto.image,
-        video: nftDto.video,
-        description: nftDto.description,
-      },
+      data: nftDto,
     });
     return createdNft;
   } catch (error) {
