@@ -50,7 +50,7 @@ const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
     logger.error(error);
     throw errorGenerator({
       msg: responseMessage.INSUFFICIENT_NFT,
-      statusCode: statusCode.DB_ERROR,
+      statusCode: statusCode.BAD_REQUEST,
     });
   }
 };
@@ -85,7 +85,7 @@ const integrateNft = async (userId: number, nfts: Array<string>, nftName: string
   } catch (error) {
     throw errorGenerator({
       msg: responseMessage.INSUFFICIENT_NFT,
-      statusCode: statusCode.DB_ERROR,
+      statusCode: statusCode.BAD_REQUEST,
     });
   }
 };
@@ -399,12 +399,7 @@ const modifyNftInfo = async (nftName: string, nftDto: nftDto) => {
     }
     const modifiedNft = await prisma.nft.update({
       where: { name: nftName },
-      data: {
-        name: nftDto.name,
-        image: nftDto.image,
-        video: nftDto.video,
-        description: nftDto.description,
-      },
+      data: nftDto,
     });
     return modifiedNft;
   } catch (error) {
@@ -412,7 +407,7 @@ const modifyNftInfo = async (nftName: string, nftDto: nftDto) => {
     logger.error(error);
     throw errorGenerator({
       msg: responseMessage.INVALID_NFT,
-      statusCode: statusCode.DB_ERROR,
+      statusCode: statusCode.NOT_FOUND,
     });
   }
 };
@@ -427,7 +422,7 @@ const checkDeployedState = async (nftName: string) => {
     if (data?.isLoading) {
       throw errorGenerator({
         msg: responseMessage.IS_LOADING_NFT,
-        statusCode: statusCode.DB_ERROR,
+        statusCode: statusCode.BAD_REQUEST,
       });
     }
   } catch (error) {
@@ -446,7 +441,7 @@ const checkLoadingState = async (id: number) => {
   if (data?.is_Loading) {
     throw errorGenerator({
       msg: responseMessage.IS_LOADING_NFT,
-      statusCode: statusCode.DB_ERROR,
+      statusCode: statusCode.BAD_REQUEST,
     });
   }
 };
