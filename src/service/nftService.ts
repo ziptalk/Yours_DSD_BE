@@ -36,7 +36,7 @@ const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
       for (let i = 0; i < nfts.length; i++) {
         const nftName = nfts[i];
         const nft = await tx.user_has_nft.findFirst({
-          where: { user_id: userId, name: nftName },
+          where: { user_id: userId, name: nftName, transaction_hash: null },
         });
         await tx.user_has_nft.delete({
           where: {
