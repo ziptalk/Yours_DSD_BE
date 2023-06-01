@@ -394,10 +394,6 @@ const addBurnInfo = async (columnId: number) => {
 
 const modifyNftInfo = async (nftName: string, nftDto: nftDto) => {
   try {
-    const nft = await prisma.nft.findFirst({ where: { name: nftName } });
-    if (!nft) {
-      throw Error;
-    }
     const modifiedNft = await prisma.nft.update({
       where: { name: nftName },
       data: nftDto,
