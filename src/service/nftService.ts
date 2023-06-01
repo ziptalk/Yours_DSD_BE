@@ -355,6 +355,33 @@ const getMintedUserNftInfo = async (nftName: string, userId: number) => {
   }
 };
 
+const getLoadingUserNftInfo = async (nftName: string, userId: number) => {
+  try {
+    const data = await prisma.user_has_nft.findFirst({
+      where: {
+        user_id: userId,
+        name: nftName,
+        deleted_at: null,
+        transaction_hash: null,
+      },
+      select: {
+        id: true,
+        user_id: true,
+        mint_id: true,
+        transaction_hash: true,
+        transaction_date: true,
+      },
+    });
+    return data;
+  } catch (error) {
+    logger.error("[nftService]getLoadingUserNftInfo ERROR");
+    logger.error(error);
+    throw errorGenerator({
+      msg: responseMessage.GET_NFT_INFO_FAIL,
+      statusCode: statusCode.DB_ERROR,
+    });
+  }
+};
 /**소각 시 deletedAt정보 추가 */
 const addBurnInfo = async (columnId: number) => {
   await prisma.user_has_nft.update({
@@ -444,4 +471,5 @@ export {
   finishLoading,
   deleteNftInfo,
   integrateNft,
+  getLoadingUserNftInfo,
 };
