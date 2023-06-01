@@ -26,9 +26,6 @@ export default {
   GET_NFT_INFO_FAIL: "nft 정보 조회 중 에러가 발생하였습니다.",
   SAVE_NFT_ADDR_FAIL: "nft 주소 저장 중 에러가 발생하였습니다.",
   SAVE_MINT_ID_FAIL: "nft mint id 저장 중 에러가 발생하였습니다",
-  DEPLOY_NFT_FAIL_WEB2: "[WEB2]nft 발행 중 에러가 발생하였습니다.",
-  MINT_NFT_FAIL_WEB2: "[WEB2]nft 민팅 중 에러가 발생하였습니다.",
-  BURN_NFT_FAIL_WEB2: "[WEB2]nft 소각 중 에러가 발생하였습니다.",
   MODIFY_NFT_INFO_FAIL: "nft 정보 수정 중 에러가 발생하였습니다.",
   NFT_ALREADY_EXIST: "이미 존재하는 nft입니다.",
 
