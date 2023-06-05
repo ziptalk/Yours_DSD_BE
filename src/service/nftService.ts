@@ -92,7 +92,7 @@ const integrateNft = async (userId: number, nfts: Array<string>, nftName: string
 /**userId기반 모든 유저 소유 nft정보 조회 */
 const getAllUserNftByUserId = async (userId: number) => {
   try {
-    const data = await prisma.user_has_nft.findMany({
+    const userNft = await prisma.user_has_nft.findMany({
       where: { user_id: userId, deleted_at: null, transaction_hash: null },
       select: {
         user_id: true,
@@ -102,7 +102,7 @@ const getAllUserNftByUserId = async (userId: number) => {
         transaction_hash: true,
       },
     });
-    return data;
+    return userNft;
   } catch (error) {
     logger.error("[nftService]getAllUserNftByUserId ERROR");
     logger.error(error);
