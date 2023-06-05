@@ -38,7 +38,20 @@ const integrateNft = async (req: Request, res: Response, next: NextFunction) => 
 const getAllUserNftInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.params;
-    const data = await nftService.getAllUserNftByUserId(+userId);
+    const userNfts = await nftService.getAllUserNftByUserId(+userId);
+    let data: any[] = [];
+    for (let i = 0; i < userNfts.length; i++) {
+      const { name, user_id, mint_id, transaction_hash, transaction_date } = userNfts[i];
+      const userNft = {
+        userId: user_id,
+        name,
+        mintId: mint_id,
+        transactionHash: transaction_hash,
+        transactionDate: transaction_date,
+      };
+      data.push(userNft);
+    }
+
     logger.info("nft소유정보를 조회합니다.");
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
