@@ -167,8 +167,8 @@ const modifyNft = async (req: Request, res: Response, next: NextFunction) => {
     /**nft 존재 여부 확인 */
     const nftInfo = await nftService.getNftInfo(nftName);
     logger.info(`nft 존재 여부 확인 결과 nftInfo ${JSON.stringify(nftInfo, null, 4)}`);
-    const data = await nftService.modifyNftInfo(nftName, nftDto);
-    return success(res, statusCode.OK, responseMessage.SUCCESS, data);
+    await nftService.modifyNftInfo(nftName, nftDto);
+    return success(res, statusCode.OK, responseMessage.SUCCESS);
   } catch (error) {
     next(error);
   }
