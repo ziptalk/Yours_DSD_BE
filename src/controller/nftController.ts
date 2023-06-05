@@ -236,7 +236,7 @@ const deleteNftInfoByName = async (req: Request, res: Response, next: NextFuncti
     const { nftName } = req.params;
     const data = await nftService.deleteNftInfo(nftName);
 
-    return success(res, statusCode.OK, responseMessage.SUCCESS, data);
+    return success(res, statusCode.OK, responseMessage.SUCCESS);
   } catch (error) {
     next(error);
   }
