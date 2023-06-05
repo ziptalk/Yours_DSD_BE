@@ -118,7 +118,15 @@ const saveNftInfo = async (nftDto: nftDto) => {
     const createdNft = await prisma.nft.create({
       data: nftDto,
     });
-    return createdNft;
+    const data = {
+      name: createdNft?.name!,
+      image: createdNft?.image,
+      video: createdNft?.video,
+      description: createdNft?.description,
+      nftAddress: createdNft?.nft_address,
+      isLoading: createdNft.is_loading,
+    };
+    return data;
   } catch (error) {
     logger.error("[nftService]saveNftInfo ERROR");
     logger.error(error);
@@ -260,7 +268,7 @@ const saveNftAddress = async (nftName: string, nftAddress: string) => {
     await prisma.nft.update({
       where: { name: nftName },
       data: {
-        nft_address:nftAddress
+        nft_address: nftAddress,
       },
     });
   } catch (error) {
