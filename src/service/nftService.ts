@@ -97,9 +97,6 @@ const getAllUserNftByUserId = async (userId: number) => {
       select: {
         user_id: true,
         name: true,
-        mint_id: true,
-        transaction_date: true,
-        transaction_hash: true,
       },
     });
     return userNft;
