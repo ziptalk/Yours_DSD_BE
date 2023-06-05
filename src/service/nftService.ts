@@ -142,8 +142,8 @@ const getNftInfo = async (nftName: string) => {
     image: nftInfo?.image,
     video: nftInfo?.video,
     description: nftInfo?.description,
-    nftAddress: nftInfo?.nftAddress,
-    is_loading: nftInfo.isLoading,
+    nftAddress: nftInfo?.nft_address,
+    isLoading: nftInfo.is_loading,
   };
   return data;
 };
@@ -176,7 +176,7 @@ const startDeploy = async (nftName: string) => {
         name: nftName,
       },
       data: {
-        isLoading: true,
+        is_loading: true,
       },
     });
   } catch (error) {
@@ -196,7 +196,7 @@ const finishDeploy = async (nftName: string) => {
         name: nftName,
       },
       data: {
-        isLoading: false,
+        is_loading: false,
       },
     });
   } catch (error) {
@@ -219,7 +219,7 @@ const startLoading = async (id: number) => {
         id: nft?.id,
       },
       data: {
-        is_Loading: true,
+        is_loading: true,
       },
     });
   } catch (error) {
@@ -242,7 +242,7 @@ const finishLoading = async (id: number) => {
         id: nft?.id,
       },
       data: {
-        is_Loading: false,
+        is_loading: false,
       },
     });
   } catch (error) {
@@ -260,7 +260,7 @@ const saveNftAddress = async (nftName: string, nftAddress: string) => {
     await prisma.nft.update({
       where: { name: nftName },
       data: {
-        nftAddress,
+        nft_address:nftAddress
       },
     });
   } catch (error) {
@@ -292,9 +292,9 @@ const saveMintId = async (id: number, mintId: number, txHash: string, txDate: Da
 const getNftAddress = async (nftName: string) => {
   const result = await prisma.nft.findFirst({
     where: { name: nftName },
-    select: { nftAddress: true },
+    select: { nft_address: true },
   });
-  return result?.nftAddress;
+  return result?.nft_address;
 };
 
 /**nft이름, userId기반 민팅되지 않은 nft정보 조회 + isLoading=false */
@@ -306,7 +306,7 @@ const getUnmintedUserNftInfo = async (nftName: string, userId: number) => {
         name: nftName,
         deleted_at: null,
         transaction_hash: null,
-        is_Loading: false,
+        is_loading: false,
       },
       select: {
         id: true,
@@ -336,7 +336,7 @@ const getMintedUserNftInfo = async (nftName: string, userId: number) => {
         name: nftName,
         deleted_at: null,
         transaction_hash: { not: null },
-        is_Loading: false,
+        is_loading: false,
       },
       select: {
         id: true,
@@ -416,7 +416,7 @@ const checkDeployedState = async (nftName: string) => {
         name: nftName,
       },
     });
-    if (data?.isLoading) {
+    if (data?.is_loading) {
       throw errorGenerator({
         msg: responseMessage.IS_LOADING_NFT,
         statusCode: statusCode.BAD_REQUEST,
@@ -435,7 +435,7 @@ const checkLoadingState = async (id: number) => {
       id,
     },
   });
-  if (data?.is_Loading) {
+  if (data?.is_loading) {
     throw errorGenerator({
       msg: responseMessage.IS_LOADING_NFT,
       statusCode: statusCode.BAD_REQUEST,

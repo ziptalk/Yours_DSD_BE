@@ -190,7 +190,7 @@ const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunc
         statusCode: statusCode.BAD_REQUEST,
       });
     /**로딩 여부 확인 */
-    if (nftInfo.is_loading)
+    if (nftInfo.isLoading)
       throw errorGenerator({
         msg: responseMessage.IS_LOADING_NFT,
         statusCode: statusCode.BAD_REQUEST,
