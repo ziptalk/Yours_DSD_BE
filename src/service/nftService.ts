@@ -305,7 +305,7 @@ const getNftAddress = async (nftName: string) => {
 /**nft이름, userId기반 민팅되지 않은 nft정보 조회 + isLoading=false */
 const getUnmintedUserNftInfo = async (nftName: string, userId: number) => {
   try {
-    const data = await prisma.user_has_nft.findFirst({
+    const data = await prisma.user_has_nft.findFirstOrThrow({
       where: {
         user_id: userId,
         name: nftName,
@@ -326,8 +326,8 @@ const getUnmintedUserNftInfo = async (nftName: string, userId: number) => {
     logger.error("[nftService]getUnmintedUserNftInfo ERROR");
     logger.error(error);
     throw errorGenerator({
-      msg: responseMessage.GET_NFT_INFO_FAIL,
-      statusCode: statusCode.DB_ERROR,
+      msg: responseMessage.INSUFFICIENT_NFT,
+      statusCode: statusCode.NOT_FOUND,
     });
   }
 };
