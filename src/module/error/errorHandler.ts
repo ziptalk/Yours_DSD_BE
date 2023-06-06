@@ -9,7 +9,7 @@ const errorHandler = (
   next: NextFunction,
 ) => {
   const { message, statusCode } = error;
-  fail(res, statusCode!, message);
+  return fail(res, statusCode!, message);
 };
 
 export default errorHandler;
