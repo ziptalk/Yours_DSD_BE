@@ -41,13 +41,10 @@ const getAllUserNftInfo = async (req: Request, res: Response, next: NextFunction
     const userNfts = await nftService.getAllUserNftByUserId(+userId);
     let data: any[] = [];
     for (let i = 0; i < userNfts.length; i++) {
-      const { name, user_id, mint_id, transaction_hash, transaction_date } = userNfts[i];
+      const { name, user_id } = userNfts[i];
       const userNft = {
         userId: user_id,
         name,
-        mintId: mint_id,
-        transactionHash: transaction_hash,
-        transactionDate: transaction_date,
       };
       data.push(userNft);
     }
