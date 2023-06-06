@@ -113,9 +113,9 @@ const deployAndTransferNft = async (req: Request, res: Response, next: NextFunct
     logger.info(error);
     const userNft = await nftService.getLoadingUserNftInfo(name, +id);
     logger.info(
-      `다음 nft의 is_Loading을 false로 되돌립니다.${JSON.stringify(userNft, null, 4)}`,
+      `다음 nft의 is_loading을 false로 되돌립니다.${JSON.stringify(userNft, null, 4)}`,
     );
-    nftService.finishLoading(userNft?.id!);
+    await nftService.finishLoading(userNft?.id!);
     next(error);
   }
 };
