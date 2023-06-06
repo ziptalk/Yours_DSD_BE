@@ -11,5 +11,5 @@ export default {
   INTERNAL_SERVER_ERROR: 500, // 서버에 오류가 발생하여 응답 할 수 없음을 의미
   SERVICE_UNAVAILABLE: 503, // 현재 서버가 유지보수 등의 이유로 일시적인 사용 불가함을 의미
   DB_ERROR: 600,
-  WEB3_ERROR: 4000,
+  WEB3_ERROR: 421,
 };
