@@ -18,7 +18,7 @@ const web2Mint = async (req: Request, res: Response, next: NextFunction) => {
         msg: responseMessage.INVALID_NFT,
         statusCode: statusCode.NOT_FOUND,
       });
-    const data = await nftService.saveMintInfo(+userId, nftName);
+    const data = await nftService.saveMintInfo(userId, nftName);
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
@@ -38,7 +38,7 @@ const integrateNft = async (req: Request, res: Response, next: NextFunction) => 
 const getAllUserNftInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.params;
-    const userNfts = await nftService.getAllUserNftByUserId(+userId);
+    const userNfts = await nftService.getAllUserNftByUserId(userId);
     let data: any[] = [];
     for (let i = 0; i < userNfts.length; i++) {
       const { name, user_id } = userNfts[i];
@@ -60,7 +60,7 @@ const deleteUserNftInfo = async (req: Request, res: Response, next: NextFunction
   try {
     const { userId } = req.params;
     const { nfts } = req.body;
-    await nftService.deleteManyMintInfo(+userId, nfts);
+    await nftService.deleteManyMintInfo(userId, nfts);
     return success(res, statusCode.OK, responseMessage.SUCCESS);
   } catch (error) {
     next(error);
@@ -111,7 +111,7 @@ const deployAndTransferNft = async (req: Request, res: Response, next: NextFunct
     return success(res, statusCode.OK, responseMessage.SUCCESS, mintData);
   } catch (error) {
     logger.info(error);
-    const userNft = await nftService.getLoadingUserNftInfo(name, +id);
+    const userNft = await nftService.getLoadingUserNftInfo(name, id);
     logger.info(
       `다음 nft의 is_loading을 false로 되돌립니다.${JSON.stringify(userNft, null, 4)}`,
     );
@@ -134,7 +134,7 @@ const deployAndBurnNft = async (req: Request, res: Response, next: NextFunction)
 
     /**nft 소각 */
     logger.info(`${nftName}의 소각이 시작되었습니다.`);
-    const transactionHash = await burnNft(nftName, +userId);
+    const transactionHash = await burnNft(nftName, userId);
     logger.info(`${nftName}의 소각이 완료되었습니다.`);
     return success(res, statusCode.OK, responseMessage.SUCCESS, {
       transactionHash: transactionHash,

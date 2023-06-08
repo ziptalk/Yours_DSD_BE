@@ -37,7 +37,7 @@ const deployNFT = async (nftName: string) => {
 };
 
 /**nft모듈: nft민팅 */
-const mintNft = async (nftName: string, receiverAddress: string, userId: number) => {
+const mintNft = async (nftName: string, receiverAddress: string, userId: string) => {
   /**web2상에서 가지고있는지, isLoading이 false인지 체크하고 가지고있으면 민팅 시작.*/
   const userNft = await nftService.getUnmintedUserNftInfo(nftName, userId);
   if (!userNft) {
@@ -69,7 +69,7 @@ const mintNft = async (nftName: string, receiverAddress: string, userId: number)
 };
 
 /**nft모듈: nft소각 */
-const burnNft = async (nftName: string, userId: number) => {
+const burnNft = async (nftName: string, userId: string) => {
   const nftInfo = await nftService.getNftInfo(nftName);
   /**민팅된 nft 조회 */
   const userNft = await nftService.getMintedUserNftInfo(nftName, userId);

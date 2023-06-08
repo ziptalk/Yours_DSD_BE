@@ -6,7 +6,7 @@ import { nftDto } from "../interface/nftDto";
 import { logger } from "../module/winston";
 const prisma = new PrismaClient();
 
-const saveMintInfo = async (userId: number, nftName: string) => {
+const saveMintInfo = async (userId: string, nftName: string) => {
   try {
     const user = await prisma.user_has_nft.create({
       data: {
@@ -30,7 +30,7 @@ const saveMintInfo = async (userId: number, nftName: string) => {
 };
 
 /**유저 소유 nft 여러개 삭제 */
-const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
+const deleteManyMintInfo = async (userId: string, nfts: Array<string>) => {
   try {
     await prisma.$transaction(async (tx) => {
       for (let i = 0; i < nfts.length; i++) {
@@ -55,7 +55,7 @@ const deleteManyMintInfo = async (userId: number, nfts: Array<string>) => {
   }
 };
 /**통합 nft 생성 */
-const integrateNft = async (userId: number, nfts: Array<string>, nftName: string) => {
+const integrateNft = async (userId: string, nfts: Array<string>, nftName: string) => {
   try {
     await prisma.$transaction(async (tx) => {
       for (let i = 0; i < nfts.length; i++) {
@@ -90,7 +90,7 @@ const integrateNft = async (userId: number, nfts: Array<string>, nftName: string
   }
 };
 /**userId기반 모든 유저 소유 nft정보 조회 */
-const getAllUserNftByUserId = async (userId: number) => {
+const getAllUserNftByUserId = async (userId: string) => {
   try {
     const userNft = await prisma.user_has_nft.findMany({
       where: { user_id: userId, deleted_at: null, transaction_hash: null },
@@ -303,7 +303,7 @@ const getNftAddress = async (nftName: string) => {
 };
 
 /**nft이름, userId기반 민팅되지 않은 nft정보 조회 + isLoading=false */
-const getUnmintedUserNftInfo = async (nftName: string, userId: number) => {
+const getUnmintedUserNftInfo = async (nftName: string, userId: string) => {
   try {
     const data = await prisma.user_has_nft.findFirstOrThrow({
       where: {
@@ -333,7 +333,7 @@ const getUnmintedUserNftInfo = async (nftName: string, userId: number) => {
 };
 
 /**nft이름, userId기반 민팅된 nft정보 조회 */
-const getMintedUserNftInfo = async (nftName: string, userId: number) => {
+const getMintedUserNftInfo = async (nftName: string, userId: string) => {
   try {
     const data = await prisma.user_has_nft.findFirst({
       where: {
@@ -362,7 +362,7 @@ const getMintedUserNftInfo = async (nftName: string, userId: number) => {
   }
 };
 
-const getLoadingUserNftInfo = async (nftName: string, userId: number) => {
+const getLoadingUserNftInfo = async (nftName: string, userId: string) => {
   try {
     const data = await prisma.user_has_nft.findFirst({
       where: {
