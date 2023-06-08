@@ -20,14 +20,14 @@ router.post(
 
 router.get(
   "/own/:userId",
-  [param("userId").isInt()],
+  [param("userId").notEmpty()],
   errorValidator,
   nftController.getAllUserNftInfo,
 );
 
 router.put(
   "/own/:userId",
-  [param("userId").isInt(), body("nfts").notEmpty()],
+  [param("userId").notEmpty(), body("nfts").notEmpty()],
   errorValidator,
   nftController.deleteUserNftInfo,
 );
