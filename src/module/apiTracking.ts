@@ -3,6 +3,7 @@ import config from "../config";
 import { logger } from "./winston";
 
 const sendApiEvent = async (category: string) => {
+  logger.info(`${category}로 sendApiEvent 호출`);
   const body = {
     eventTimestamp: Date.now(),
     browser: {
