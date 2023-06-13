@@ -31,4 +31,12 @@ export default {
 
   ipfsId: process.env.REACT_APP_IPFS_ID as string,
   ipfsSecret: process.env.REACT_APP_IPFS_SECRET as string,
+
+  /**
+   * airbridge
+   */
+  airbridgeLabel: process.env.AIRBRIDGE_LABEL as string,
+  airbridgeClientId: process.env.AIRBRIDGE_CLIENTID as string,
+  airbridgeToken: process.env.AIRBRIDGE_TOKEN as string,
+  airbridgeAppName: process.env.AIRBRIDGE_APP_NAME as string,
 };
