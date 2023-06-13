@@ -1,5 +1,6 @@
 import axios from "axios";
 import config from "../config";
+import { logger } from "./winston";
 
 const sendApiEvent = async (category: string) => {
   const body = {
@@ -18,12 +19,16 @@ const sendApiEvent = async (category: string) => {
   const head = {
     headers: { Authorization: `Bearer ${config.airbridgeToken}` },
   };
-  const result = await axios.post(
-    `https://api.airbridge.io/events/v1/apps/${config.airbridgeAppName}/web/9320`,
-    body,
-    head,
-  );
-  return result;
+  try {
+    const result = await axios.post(
+      `https://api.airbridge.io/events/v1/apps/${config.airbridgeAppName}/web/9320`,
+      body,
+      head,
+    );
+    return result;
+  } catch (error) {
+    logger.error(error);
+  }
 };
 
 export { sendApiEvent };
