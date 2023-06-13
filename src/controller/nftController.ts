@@ -9,6 +9,7 @@ import { uploadMetaIpfs } from "../contract/commonContract";
 import { setUri } from "../contract/mumbaiContract";
 import { logger } from "../module/winston";
 import { errorGenerator } from "../module";
+import { sendApiEvent } from "../module/apiTracking";
 const web2Mint = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, nftName } = req.body;
@@ -19,6 +20,7 @@ const web2Mint = async (req: Request, res: Response, next: NextFunction) => {
         statusCode: statusCode.NOT_FOUND,
       });
     const data = await nftService.saveMintInfo(userId, nftName);
+    await sendApiEvent("WEB2_NFT_OWN_CREATE");
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
@@ -29,6 +31,7 @@ const integrateNft = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const { userId, oldNfts, newNft } = req.body;
     const data = await nftService.integrateNft(userId, oldNfts, newNft);
+    await sendApiEvent("WEB2_NFT_INTEGRATE");
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
@@ -49,7 +52,7 @@ const getAllUserNftInfo = async (req: Request, res: Response, next: NextFunction
       data.push(userNft);
     }
 
-    logger.info("nft소유정보를 조회합니다.");
+    await sendApiEvent("WEB2_NFT_OWN_GET");
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
@@ -61,6 +64,7 @@ const deleteUserNftInfo = async (req: Request, res: Response, next: NextFunction
     const { userId } = req.params;
     const { nfts } = req.body;
     await nftService.deleteManyMintInfo(userId, nfts);
+    await sendApiEvent("WEB2_NFT_OWN_DELETE");
     return success(res, statusCode.OK, responseMessage.SUCCESS);
   } catch (error) {
     next(error);
@@ -83,6 +87,7 @@ const createNft = async (req: Request, res: Response, next: NextFunction) => {
       description,
     };
     const data = await nftService.saveNftInfo(nftDto);
+    await sendApiEvent("WEB2_NFT_CREATE");
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     logger.error(error);
@@ -108,6 +113,7 @@ const deployAndTransferNft = async (req: Request, res: Response, next: NextFunct
     logger.info(`${nftName}의 민팅이 시작되었습니다.`);
     const mintData = await mintNft(nftName, receiverAddress, userId);
     logger.info(`${nftName}의 민팅이 완료되었습니다.`);
+    await sendApiEvent("WEB3_NFT_TRANSFER");
     return success(res, statusCode.OK, responseMessage.SUCCESS, mintData);
   } catch (error) {
     logger.info(error);
@@ -136,6 +142,7 @@ const deployAndBurnNft = async (req: Request, res: Response, next: NextFunction)
     logger.info(`${nftName}의 소각이 시작되었습니다.`);
     const transactionHash = await burnNft(nftName, userId);
     logger.info(`${nftName}의 소각이 완료되었습니다.`);
+    await sendApiEvent("WEB3_NFT_BURN");
     return success(res, statusCode.OK, responseMessage.SUCCESS, {
       transactionHash: transactionHash,
     });
@@ -165,6 +172,7 @@ const modifyNft = async (req: Request, res: Response, next: NextFunction) => {
     const nftInfo = await nftService.getNftInfo(nftName);
     logger.info(`nft 존재 여부 확인 결과 nftInfo ${JSON.stringify(nftInfo, null, 4)}`);
     await nftService.modifyNftInfo(nftName, nftDto);
+    await sendApiEvent("WEB2_NFT_EDIT");
     return success(res, statusCode.OK, responseMessage.SUCCESS);
   } catch (error) {
     next(error);
@@ -210,6 +218,7 @@ const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunc
     const newUri = await uploadMetaIpfs(name, description, image, video);
     const data = await setUri(newUri, nftInfo.nftAddress);
     await nftService.finishDeploy(name);
+    await sendApiEvent("WEB3_NFT_EDIT");
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     logger.error("[nftService]modifyDeployedNftData ERROR");
@@ -222,6 +231,7 @@ const getNftInfoByName = async (req: Request, res: Response, next: NextFunction)
   try {
     const { nftName } = req.params;
     const data = await nftService.getNftInfo(nftName);
+    await sendApiEvent("WEB2_NFT_GET");
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
   } catch (error) {
     next(error);
@@ -232,7 +242,7 @@ const deleteNftInfoByName = async (req: Request, res: Response, next: NextFuncti
   try {
     const { nftName } = req.params;
     const data = await nftService.deleteNftInfo(nftName);
-
+    await sendApiEvent("WEB2_NFT_DELETE");
     return success(res, statusCode.OK, responseMessage.SUCCESS);
   } catch (error) {
     next(error);

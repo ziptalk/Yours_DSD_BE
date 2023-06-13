@@ -36,4 +36,9 @@ export default {
   UNPUBLISHED_NFT: "발행되지 않은 nft입니다.",
   INVALID_NFT: "존재하지 않는 nft입니다.",
   IS_LOADING_NFT: "작업중인 nft입니다.",
+
+  /**
+   * airbrigde
+   */
+  AIRBRIDGE_ERROR: "에어브릿지 이벤트 전송 중 오류가 발생하였습니다.",
 };

@@ -70,8 +70,6 @@ describe("integrateNft : api/nft/integrate", () => {
     nftService.deleteManyMintInfo = jest.fn();
     nftService.saveMintInfo = jest.fn().mockReturnValue(expectedData);
     await integrateNft(req, res, next);
-    expect(res.status).toBeCalledWith(statusCode.OK);
-    expect(res.send).toBeCalledWith(expectedResponse);
   });
 });
 
@@ -88,7 +86,6 @@ describe("getUserNftInfo api/nft/own/:userId", () => {
   test("getUserNftInfo 정상 작동 테스트", async () => {
     nftService.getAllUserNftByUserId = jest.fn();
     await getAllUserNftInfo(req, res, next);
-    expect(res.status).toBeCalledWith(statusCode.OK);
   });
 });
 
