@@ -29,7 +29,7 @@ const colors = {
 winston.addColors(colors);
 
 const printFormat = winston.format.printf((info) => {
-  let logString = `${info.timestamp} ${info.level}  -> ${info.message}`;
+  let logString = `${info.level}  -> ${info.message}`;
   if (info.level == "error") {
     logString += `\n ${info.stack}`;
   }
@@ -41,9 +41,8 @@ const format = winston.format.combine(
   winston.format.timestamp({ format: `${timeStamp()}  ||` }),
   printFormat,
 );
-
 const logger = winston.createLogger({
-  format,
+  format: printFormat,
   level: level(),
   transports: [
     new winston.transports.DailyRotateFile({
