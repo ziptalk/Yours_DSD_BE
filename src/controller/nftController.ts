@@ -163,9 +163,9 @@ const modifyNft = async (req: Request, res: Response, next: NextFunction) => {
       video,
       description,
     };
-    /**바꾸려는 nft 이름이 이미 존재하는지 확인 */
+    /**만약 nft 이름이 바뀐다면,바꾸려는 nft 이름이 이미 존재하는지 확인 */
     const isNftNameExist = await nftService.isNftNameExist(name);
-    if (isNftNameExist)
+    if (isNftNameExist && nftName !== name)
       throw errorGenerator({
         msg: responseMessage.NFT_ALREADY_EXIST,
         statusCode: statusCode.BAD_REQUEST,
@@ -193,9 +193,9 @@ const modifyDeployedNftData = async (req: Request, res: Response, next: NextFunc
       description,
     };
     globalName = name;
-    /**바꾸려는 nft 이름이 이미 존재하는지 확인 */
+    /**만약 nft 이름이 바뀐다면,바꾸려는 nft 이름이 이미 존재하는지 확인 */
     const isNftNameExist = await nftService.isNftNameExist(name);
-    if (isNftNameExist)
+    if (isNftNameExist && nftName !== name)
       throw errorGenerator({
         msg: responseMessage.NFT_ALREADY_EXIST,
         statusCode: statusCode.BAD_REQUEST,
