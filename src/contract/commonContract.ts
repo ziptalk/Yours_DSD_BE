@@ -33,7 +33,8 @@ const uploadMetaIpfs = async (
         video,
       }),
     );
-    resultPath = `https://ipfs.infura.io/ipfs/${result.path}`;
+    resultPath = `https://yoursdsd.infura-ipfs.io/ipfs/${result.path}`;
+    logger.info(`IPFS LINK: ${resultPath}`);
     return resultPath;
   } catch (error) {
     logger.error("uploadMetaIpfs에서 에러 발생");
