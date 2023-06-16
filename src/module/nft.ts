@@ -25,7 +25,7 @@ const deployNFT = async (nftName: string) => {
     nftInfo.image!,
     nftInfo.video!,
   );
-  logger.info("ipfs에 정보 업로드 완료", JSON.stringify(metaUri, null, 4));
+  logger.info("ipfs에 정보 업로드 완료", metaUri);
 
   /**nft 발행 시작 */
   await nftService.startDeploy(nftName);
