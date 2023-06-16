@@ -30,6 +30,8 @@ const web2Mint = async (req: Request, res: Response, next: NextFunction) => {
 const integrateNft = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, oldNfts, newNft } = req.body;
+    /**newNft가 존재하는지 검사 */
+    await nftService.getNftInfo(newNft);
     const data = await nftService.integrateNft(userId, oldNfts, newNft);
     await sendApiEvent("WEB2_NFT_INTEGRATE");
     return success(res, statusCode.OK, responseMessage.SUCCESS, data);
