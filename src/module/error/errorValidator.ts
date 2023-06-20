@@ -8,14 +8,10 @@ const errorValidator = (req: Request, res: Response, next: NextFunction) => {
   if (!errors.isEmpty()) {
     const errorList = errors.array();
     let errorMsgs = "";
-    for (let i = 0; i < errorList.length; i++) {
-      const err: any = errorList[i];
-      if (i == errorList.length - 1) {
-        errorMsgs += err["location"] + ":" + err["path"];
-      } else {
-        errorMsgs += err["location"] + ":" + err["path"] + " & ";
-      }
-    }
+    errorList.map(
+      (err: any) => (errorMsgs += err["location"] + ":" + err["path"] + " & "),
+    );
+    errorMsgs = errorMsgs.slice(0, -3);
     return fail(res, statusCode.BAD_REQUEST, errorMsgs + responseMessage.ERROR_VALIDATOR);
   }
   next();
