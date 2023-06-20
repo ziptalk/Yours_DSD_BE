@@ -5,7 +5,7 @@ export default {
 
   INTERNAL_SERVER_ERROR: "서버 에러",
   BAD_REQUEST: "잘못된 요청입니다.",
-  ERROR_VALIDATOR: "errorValidator 오류 발생",
+  ERROR_VALIDATOR: "에서 잘못된 값이 감지되었습니다: Error Validator 에러 발생",
 
   SUCCESS: "요청을 성공적으로 수행하였습니다.",
 
