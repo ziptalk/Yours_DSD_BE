@@ -70,26 +70,36 @@ const mintNft = async (nftName: string, receiverAddress: string, userId: string)
 
 /**nft모듈: nft소각 */
 const burnNft = async (nftName: string, userId: string) => {
-  const nftInfo = await nftService.getNftInfo(nftName);
-  /**민팅된 nft 조회 */
-  const userNft = await nftService.getMintedUserNftInfo(nftName, userId);
-  if (!userNft) {
-    throw errorGenerator({
-      msg: responseMessage.INSUFFICIENT_NFT,
-      statusCode: statusCode.BAD_REQUEST,
-    });
+  let id;
+  try {
+    const nftInfo = await nftService.getNftInfo(nftName);
+    /**민팅된 nft 조회 */
+    const userNft = await nftService.getMintedUserNftInfo(nftName, userId);
+    if (!userNft) {
+      throw errorGenerator({
+        msg: responseMessage.INSUFFICIENT_NFT,
+        statusCode: statusCode.BAD_REQUEST,
+      });
+    }
+    id = userNft.id;
+    const nftContract = new ethers.Contract(
+      nftInfo.nftAddress as string,
+      dsdBenefitData.abi,
+      polygonProvider,
+    );
+
+    await nftService.startLoading(userNft.id);
+    const burnInfo = await burnNFT(nftContract, userNft?.mint_id!);
+    await nftService.addBurnInfo(userNft?.id!);
+    await nftService.finishLoading(userNft.id);
+
+    return burnInfo.transactionHash;
+  } catch (error) {
+    logger.info(
+      `${id}번 유저의 ${nftName} 소유정보(${id}) is_loading을 false로 되돌립니다.`,
+    );
+    await nftService.finishLoading(id as number);
+    throw error;
   }
-  const nftContract = new ethers.Contract(
-    nftInfo.nftAddress as string,
-    dsdBenefitData.abi,
-    polygonProvider,
-  );
-
-  await nftService.startLoading(userNft.id);
-  const burnInfo = await burnNFT(nftContract, userNft?.mint_id!);
-  await nftService.addBurnInfo(userNft?.id!);
-  await nftService.finishLoading(userNft.id);
-
-  return burnInfo.transactionHash;
 };
 export { deployNFT, mintNft, burnNft };
