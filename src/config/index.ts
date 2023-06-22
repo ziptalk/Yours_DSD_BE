@@ -28,6 +28,7 @@ export default {
 
   mumbaiRPC: process.env.MUMBAI_RPC as string,
   walletSecretKey: process.env.WALLET_SECRET_KEY as string,
+  polygonRPC: process.env.POLYGON_RPC as string,
 
   ipfsId: process.env.REACT_APP_IPFS_ID as string,
   ipfsSecret: process.env.REACT_APP_IPFS_SECRET as string,
