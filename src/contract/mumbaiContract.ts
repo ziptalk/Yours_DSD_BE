@@ -17,7 +17,7 @@ const contract = new ethers.Contract(factoryAddress, factoryData.abi, polygonPro
 const deployMumbaiNFT = async (name: string | null, uri: string | null) => {
   try {
     polygonProvider.getTransactionCount(walletAddress).then((nonce) => {
-      logger.info("Nonce in burnNft is ", nonce);
+      logger.info(`Nonce in deployMumbaiNFT is ${nonce}`);
     });
 
     let rc;
@@ -41,7 +41,7 @@ const deployMumbaiNFT = async (name: string | null, uri: string | null) => {
 const mintMumbaiNFT = async (nft: any, address: string) => {
   try {
     polygonProvider.getTransactionCount(walletAddress).then((nonce) => {
-      logger.info("Nonce in burnNft is ", nonce);
+      logger.info(`Nonce in mintMumbaiNFT is ${nonce}`);
     });
     const gasFeeData = await polygonProvider.getFeeData();
     const transaction = await nft.connect(wallet).mint(address, {
@@ -89,7 +89,7 @@ const transferMumbaiNFT = async (
 const burnNFT = async (nft: any, mintId: number) => {
   try {
     polygonProvider.getTransactionCount(walletAddress).then((nonce) => {
-      logger.info("Nonce in burnNft is ", nonce);
+      logger.info(`Nonce in burnNFT is ${nonce}`);
     });
     const gasFeeData = await polygonProvider.getFeeData();
     const tx = await nft.connect(wallet).burn(mintId, {
@@ -111,7 +111,7 @@ const burnNFT = async (nft: any, mintId: number) => {
 const setUri = async (uri: string, nftAddress: string) => {
   try {
     polygonProvider.getTransactionCount(walletAddress).then((nonce) => {
-      logger.info("Nonce in setUri is ", nonce);
+      logger.info(`Nonce in setUri is ${nonce}`);
     });
     const contract = new ethers.Contract(nftAddress, benefitData.abi, polygonProvider);
     let rc;
