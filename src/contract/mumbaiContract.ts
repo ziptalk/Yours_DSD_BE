@@ -8,17 +8,22 @@ import { ethers } from "ethers";
 import { logger } from "../module/winston";
 
 const factoryAddress = deployed.DSDFactory;
-const polygonProvider = new ethers.providers.JsonRpcProvider(config.mumbaiRPC);
+const polygonProvider = new ethers.providers.JsonRpcProvider(config.polygonRPC);
 const walletObj = new ethers.Wallet(config.walletSecretKey);
 const wallet = walletObj.connect(polygonProvider);
+const walletAddress = config.walletAddress;
 const contract = new ethers.Contract(factoryAddress, factoryData.abi, polygonProvider);
 
 const deployMumbaiNFT = async (name: string | null, uri: string | null) => {
   try {
+    polygonProvider.getTransactionCount(walletAddress).then((nonce) => {
+      logger.info(`Nonce in deployMumbaiNFT is ${nonce}`);
+    });
+
     let rc;
-    const gas = await contract.connect(wallet).estimateGas.deployNFT(name, "", uri);
+    const gasFeeData = await polygonProvider.getFeeData();
     const tx = await contract.connect(wallet).deployNFT(name, "", uri, {
-      gasLimit: gas,
+      gasPrice: gasFeeData.gasPrice,
     });
     rc = await tx.wait();
     const addr = await getDeployedAddress(rc);
@@ -35,7 +40,14 @@ const deployMumbaiNFT = async (name: string | null, uri: string | null) => {
 
 const mintMumbaiNFT = async (nft: any, address: string) => {
   try {
-    const transaction = await nft.connect(wallet).mint(address);
+    polygonProvider.getTransactionCount(walletAddress).then((nonce) => {
+      logger.info(`Nonce in mintMumbaiNFT is ${nonce}`);
+    });
+    const gasFeeData = await polygonProvider.getFeeData();
+    const transaction = await nft.connect(wallet).mint(address, {
+      gasPrice: gasFeeData.gasPrice,
+      gasLimit: 3000000,
+    });
     const rc = await transaction.wait();
     const event = rc.events.find((event: any) => event.event === "Mint");
     const mintId = event.args[0].toNumber();
@@ -76,9 +88,14 @@ const transferMumbaiNFT = async (
 };
 const burnNFT = async (nft: any, mintId: number) => {
   try {
-    const exGas = await nft.connect(wallet).estimateGas.burn(mintId);
-    logger.info("expected gas:", exGas.toString(10));
-    const tx = await nft.connect(wallet).burn(mintId);
+    polygonProvider.getTransactionCount(walletAddress).then((nonce) => {
+      logger.info(`Nonce in burnNFT is ${nonce}`);
+    });
+    const gasFeeData = await polygonProvider.getFeeData();
+    const tx = await nft.connect(wallet).burn(mintId, {
+      gasPrice: gasFeeData.gasPrice,
+      gasLimit: 3000000,
+    });
     const rc = await tx.wait();
     return rc;
   } catch (error) {
@@ -93,6 +110,9 @@ const burnNFT = async (nft: any, mintId: number) => {
 
 const setUri = async (uri: string, nftAddress: string) => {
   try {
+    polygonProvider.getTransactionCount(walletAddress).then((nonce) => {
+      logger.info(`Nonce in setUri is ${nonce}`);
+    });
     const contract = new ethers.Contract(nftAddress, benefitData.abi, polygonProvider);
     let rc;
     const gas = await contract.connect(wallet).estimateGas.setURI(uri);
