@@ -39,7 +39,7 @@ const uploadMetaIpfs = async (
   } catch (error) {
     logger.error("uploadMetaIpfs에서 에러 발생");
     logger.error(error);
-    return responseMessage.META_ERROR;
+    throw error;
   }
 };
 
@@ -57,11 +57,11 @@ const getDeployedAddress = async (transaction: ethers.Contract) => {
       transactionHash: transactionHash,
       date: date,
     };
-
     return data;
   } catch (error) {
     logger.error("getDeployedAddress에서 에러 발생");
     logger.error(error);
+    throw error;
   }
 };
 
@@ -78,6 +78,7 @@ const getMethods = (data: any) => {
   } catch (error) {
     logger.error("getMethods에러 에러 발생");
     logger.error(error);
+    throw error;
   }
 };
 
