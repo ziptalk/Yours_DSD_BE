@@ -36,6 +36,7 @@ export default {
   UNPUBLISHED_NFT: "발행되지 않은 nft입니다.",
   INVALID_NFT: "존재하지 않는 nft입니다.",
   IS_LOADING_NFT: "작업중인 nft입니다.",
+  INVALID_WALLET_ADDRESS: "잘못된 지갑주소 입니다.",
 
   /**
    * airbrigde
