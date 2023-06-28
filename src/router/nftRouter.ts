@@ -43,7 +43,12 @@ router.post(
   nftController.deployAndTransferNft,
 );
 
-router.delete("/burn/:userId/:nftName", nftController.deployAndBurnNft);
+router.delete(
+  "/burn/:userId/:nftName",
+  [param("userId").notEmpty(), param("nftName").notEmpty()],
+  errorValidator,
+  nftController.deployAndBurnNft,
+);
 
 router.post("/", [body("name").notEmpty()], errorValidator, nftController.createNft);
 
