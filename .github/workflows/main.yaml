@@ -17,10 +17,10 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           script: |
             cd DSD/
-            npx pm2 kill
+            npx pm2 delete production
             rm -rf dist
             git pull origin main
             npx yarn install
             npx prisma generate
             npx yarn run buildOnly
-            npx pm2 start dist/app.js
+            npx pm2 start dist/app.js -n production
