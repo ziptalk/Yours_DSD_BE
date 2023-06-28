@@ -196,14 +196,18 @@ const startDeploy = async (nftName: string) => {
 
 const finishDeploy = async (nftName: string) => {
   try {
-    await prisma.nft.update({
-      where: {
-        name: nftName,
-      },
-      data: {
-        is_loading: false,
-      },
-    });
+    const nft = await prisma.nft.findFirst({ where: { name: nftName } });
+    if (nft) {
+      await prisma.nft.update({
+        where: {
+          name: nftName,
+        },
+        data: {
+          is_loading: false,
+        },
+      });
+    }
+    return nft;
   } catch (error) {
     logger.error("[nftService]finishDeploy ERROR");
     logger.error(error);
@@ -242,14 +246,17 @@ const finishLoading = async (id: number) => {
     const nft = await prisma.user_has_nft.findFirst({
       where: { id },
     });
-    await prisma.user_has_nft.update({
-      where: {
-        id: nft?.id,
-      },
-      data: {
-        is_loading: false,
-      },
-    });
+    if (nft) {
+      await prisma.user_has_nft.update({
+        where: {
+          id: nft?.id,
+        },
+        data: {
+          is_loading: false,
+        },
+      });
+    }
+    return nft;
   } catch (error) {
     logger.error("[nftService]finishLoading ERROR");
     logger.error(error);
@@ -295,11 +302,18 @@ const saveMintId = async (id: number, mintId: number, txHash: string, txDate: Da
 };
 
 const getNftAddress = async (nftName: string) => {
-  const result = await prisma.nft.findFirst({
-    where: { name: nftName },
-    select: { nft_address: true },
-  });
-  return result?.nft_address;
+  try {
+    const result = await prisma.nft.findFirstOrThrow({
+      where: { name: nftName },
+      select: { nft_address: true },
+    });
+    return result?.nft_address;
+  } catch (error) {
+    throw errorGenerator({
+      msg: responseMessage.INVALID_NFT,
+      statusCode: statusCode.NOT_FOUND,
+    });
+  }
 };
 
 /**nft이름, userId기반 민팅되지 않은 nft정보 조회 + isLoading=false */
