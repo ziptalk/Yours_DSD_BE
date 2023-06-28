@@ -10,6 +10,7 @@ import { setUri } from "../contract/mumbaiContract";
 import { logger } from "../module/winston";
 import { errorGenerator } from "../module";
 import { sendApiEvent } from "../module/apiTracking";
+import Web3 from "web3";
 const web2Mint = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId, nftName } = req.body;
@@ -103,6 +104,13 @@ const deployAndTransferNft = async (req: Request, res: Response, next: NextFunct
     const { userId, nftName, receiverAddress } = req.body;
     id = userId;
     name = nftName;
+    const validation = Web3.utils.isAddress(receiverAddress);
+    if (!validation) {
+      throw errorGenerator({
+        msg: responseMessage.INVALID_WALLET_ADDRESS,
+        statusCode: statusCode.BAD_REQUEST,
+      });
+    }
     /**발행 여부 확인 */
     const nftAddress = await nftService.getNftAddress(nftName);
     if (!nftAddress) {
@@ -120,22 +128,28 @@ const deployAndTransferNft = async (req: Request, res: Response, next: NextFunct
   } catch (error) {
     logger.info(error);
     const userNft = await nftService.getLoadingUserNftInfo(name, id);
-    logger.info(
-      `다음 nft의 is_loading을 false로 되돌립니다.${JSON.stringify(userNft, null, 4)}`,
-    );
+    if (userNft) {
+      logger.info(
+        `다음 nft의 is_loading을 false로 되돌립니다.${JSON.stringify(userNft, null, 4)}`,
+      );
+      await nftService.finishLoading(userNft?.id!);
+    }
     const nft = await nftService.finishDeploy(name);
     logger.info(
       `다음 nft의 is_deploy를 false로 되돌립니다.${JSON.stringify(nft, null, 4)}`,
     );
-    await nftService.finishLoading(userNft?.id!);
+
     next(error);
   }
 };
 
 const deployAndBurnNft = async (req: Request, res: Response, next: NextFunction) => {
+  let id = "";
+  let name = "";
   try {
     const { userId, nftName } = req.params;
-
+    id = userId;
+    name = nftName;
     /**발행 여부 확인 */
     const nftAddress = await nftService.getNftAddress(nftName);
     if (!nftAddress) {
@@ -153,6 +167,19 @@ const deployAndBurnNft = async (req: Request, res: Response, next: NextFunction)
       transactionHash: transactionHash,
     });
   } catch (error) {
+    logger.info(error);
+    const userNft = await nftService.getLoadingUserNftInfo(name, id);
+    if (userNft) {
+      logger.info(
+        `다음 nft의 is_loading을 false로 되돌립니다.${JSON.stringify(userNft, null, 4)}`,
+      );
+      await nftService.finishLoading(userNft?.id!);
+    }
+    const nft = await nftService.finishDeploy(name);
+    logger.info(
+      `다음 nft의 is_deploy를 false로 되돌립니다.${JSON.stringify(nft, null, 4)}`,
+    );
+
     next(error);
   }
 };
