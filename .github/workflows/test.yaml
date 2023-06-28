@@ -1,0 +1,26 @@
+name: deploy
+
+on:
+  push:
+    branches: [test]
+jobs:
+  AUTO_DEPLOY:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run scripts in server
+        uses: appleboy/ssh-action@master
+        with:
+          password: ${{ secrets.EC2_PASSWORD }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          script: |
+            cd Yours_DSD_BE/
+            npx pm2 delete test
+            rm -rf dist
+            git pull origin test
+            npx yarn install
+            npx prisma generate
+            npx yarn run buildOnly
+            npx pm2 start dist/app.js -n test
