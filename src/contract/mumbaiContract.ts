@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 import { logger } from "../module/winston";
 
 const factoryAddress = deployed.DSDFactory;
-const polygonProvider = new ethers.providers.JsonRpcProvider(config.polygonRPC);
+const polygonProvider = new ethers.providers.JsonRpcProvider(config.mumbaiRPC);
 const walletObj = new ethers.Wallet(config.walletSecretKey);
 const wallet = walletObj.connect(polygonProvider);
 const walletAddress = config.walletAddress;
